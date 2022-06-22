@@ -23,7 +23,7 @@ import (
 	"github.com/axiacoin/axia-network-v2/vms/platformvm"
 	"github.com/axiacoin/axia-network-v2/vms/platformvm/validator"
 	"github.com/axiacoin/axia-network-v2/vms/secp256k1fx"
-	"github.com/axiacoin/axia-network-v2/wallet/subnet/primary/common"
+	"github.com/axiacoin/axia-network-v2/axiawallet/allychain/primary/common"
 	"go.uber.org/zap"
 )
 
@@ -36,15 +36,15 @@ func (lc *localNetwork) installCustomVMs(ctx context.Context) error {
 	httpRPCEp := lc.nodeInfos[lc.nodeNames[0]].Uri
 	platformCli := platformvm.NewClient(httpRPCEp)
 
-	baseWallet, axcAssetID, testKeyAddr, err := lc.setupWallet(ctx, httpRPCEp)
+	baseAXIAWallet, axcAssetID, testKeyAddr, err := lc.setupAXIAWallet(ctx, httpRPCEp)
 	if err != nil {
 		return err
 	}
-	validatorIDs, err := lc.checkValidators(ctx, platformCli, baseWallet, testKeyAddr)
+	validatorIDs, err := lc.checkValidators(ctx, platformCli, baseAXIAWallet, testKeyAddr)
 	if err != nil {
 		return err
 	}
-	if err = lc.createSubnets(ctx, baseWallet, testKeyAddr); err != nil {
+	if err = lc.createSubnets(ctx, baseAXIAWallet, testKeyAddr); err != nil {
 		return err
 	}
 	if err = lc.restartNodesWithWhitelistedSubnets(ctx); err != nil {
@@ -52,28 +52,28 @@ func (lc *localNetwork) installCustomVMs(ctx context.Context) error {
 	}
 
 	println()
-	color.Outf("{{green}}refreshing the wallet with the new URIs after restarts{{/}}\n")
+	color.Outf("{{green}}refreshing the axiawallet with the new URIs after restarts{{/}}\n")
 	httpRPCEp = lc.nodeInfos[lc.nodeNames[0]].Uri
-	baseWallet.refresh(httpRPCEp)
-	zap.L().Info("set up base wallet with pre-funded test key",
+	baseAXIAWallet.refresh(httpRPCEp)
+	zap.L().Info("set up base axiawallet with pre-funded test key",
 		zap.String("http-rpc-endpoint", httpRPCEp),
 		zap.String("address", testKeyAddr.String()),
 	)
 
-	if err = lc.addSubnetValidators(ctx, baseWallet, validatorIDs); err != nil {
+	if err = lc.addSubnetValidators(ctx, baseAXIAWallet, validatorIDs); err != nil {
 		return err
 	}
-	if err = lc.createBlockchains(ctx, baseWallet, testKeyAddr); err != nil {
+	if err = lc.createBlockchains(ctx, baseAXIAWallet, testKeyAddr); err != nil {
 		return err
 	}
 
 	println()
-	color.Outf("{{green}}checking the remaining balance of the base wallet{{/}}\n")
-	balances, err := baseWallet.P().Builder().GetBalance()
+	color.Outf("{{green}}checking the remaining balance of the base axiawallet{{/}}\n")
+	balances, err := baseAXIAWallet.P().Builder().GetBalance()
 	if err != nil {
 		return err
 	}
-	zap.L().Info("base wallet AXC balance",
+	zap.L().Info("base axiawallet AXC balance",
 		zap.String("address", testKeyAddr.String()),
 		zap.Uint64("balance", balances[axcAssetID]),
 	)
@@ -144,27 +144,27 @@ func (lc *localNetwork) waitForCustomVMsReady(ctx context.Context) error {
 	return nil
 }
 
-func (lc *localNetwork) setupWallet(ctx context.Context, httpRPCEp string) (baseWallet *refreshableWallet, axcAssetID ids.ID, testKeyAddr ids.ShortID, err error) {
+func (lc *localNetwork) setupAXIAWallet(ctx context.Context, httpRPCEp string) (baseAXIAWallet *refreshableAXIAWallet, axcAssetID ids.ID, testKeyAddr ids.ShortID, err error) {
 	// "local/default/genesis.json" pre-funds "ewoq" key
 	testKey := genesis.EWOQKey
 	testKeyAddr = testKey.PublicKey().Address()
 	testKeychain := secp256k1fx.NewKeychain(genesis.EWOQKey)
 
 	println()
-	color.Outf("{{green}}setting up the base wallet with the seed test key{{/}}\n")
-	baseWallet, err = createRefreshableWallet(ctx, httpRPCEp, testKeychain)
+	color.Outf("{{green}}setting up the base axiawallet with the seed test key{{/}}\n")
+	baseAXIAWallet, err = createRefreshableAXIAWallet(ctx, httpRPCEp, testKeychain)
 	if err != nil {
 		return nil, ids.Empty, ids.ShortEmpty, err
 	}
-	zap.L().Info("set up base wallet with pre-funded test key",
+	zap.L().Info("set up base axiawallet with pre-funded test key",
 		zap.String("http-rpc-endpoint", httpRPCEp),
 		zap.String("address", testKeyAddr.String()),
 	)
 
 	println()
 	color.Outf("{{green}}check if the seed test key has enough balance to create validators and subnets{{/}}\n")
-	axcAssetID = baseWallet.P().AxcAssetID()
-	balances, err := baseWallet.P().Builder().GetBalance()
+	axcAssetID = baseAXIAWallet.P().AxcAssetID()
+	balances, err := baseAXIAWallet.P().Builder().GetBalance()
 	if err != nil {
 		return nil, ids.Empty, ids.ShortEmpty, err
 	}
@@ -172,16 +172,16 @@ func (lc *localNetwork) setupWallet(ctx context.Context, httpRPCEp string) (base
 	if bal <= 1*units.Axc || !ok {
 		return nil, ids.Empty, ids.ShortEmpty, fmt.Errorf("not enough AXC balance %v in the address %q", bal, testKeyAddr)
 	}
-	zap.L().Info("fetched base wallet AXC balance",
+	zap.L().Info("fetched base axiawallet AXC balance",
 		zap.String("http-rpc-endpoint", httpRPCEp),
 		zap.String("address", testKeyAddr.String()),
 		zap.Uint64("balance", bal),
 	)
 
-	return baseWallet, axcAssetID, testKeyAddr, nil
+	return baseAXIAWallet, axcAssetID, testKeyAddr, nil
 }
 
-func (lc *localNetwork) checkValidators(ctx context.Context, platformCli platformvm.Client, baseWallet *refreshableWallet, testKeyAddr ids.ShortID) (validatorIDs []ids.NodeID, err error) {
+func (lc *localNetwork) checkValidators(ctx context.Context, platformCli platformvm.Client, baseAXIAWallet *refreshableAXIAWallet, testKeyAddr ids.ShortID) (validatorIDs []ids.NodeID, err error) {
 	println()
 	color.Outf("{{green}}fetching all nodes from the existing cluster to make sure all nodes are validating the primary network/subnet{{/}}\n")
 	// ref. https://docs.axc.network/build/axia-apis/corechain/#platformgetcurrentvalidators
@@ -221,7 +221,7 @@ func (lc *localNetwork) checkValidators(ctx context.Context, platformCli platfor
 			zap.String("node-id", nodeID.String()),
 		)
 		cctx, cancel = createDefaultCtx(ctx)
-		txID, err := baseWallet.P().IssueAddValidatorTx(
+		txID, err := baseAXIAWallet.P().IssueAddValidatorTx(
 			&validator.Validator{
 				NodeID: nodeID,
 				Start:  uint64(time.Now().Add(10 * time.Second).Unix()),
@@ -249,7 +249,7 @@ func (lc *localNetwork) checkValidators(ctx context.Context, platformCli platfor
 	return validatorIDs, nil
 }
 
-func (lc *localNetwork) createSubnets(ctx context.Context, baseWallet *refreshableWallet, testKeyAddr ids.ShortID) error {
+func (lc *localNetwork) createSubnets(ctx context.Context, baseAXIAWallet *refreshableAXIAWallet, testKeyAddr ids.ShortID) error {
 	println()
 	color.Outf("{{green}}creating subnet for each custom VM{{/}}\n")
 	for vmName := range lc.customVMNameToGenesis {
@@ -262,7 +262,7 @@ func (lc *localNetwork) createSubnets(ctx context.Context, baseWallet *refreshab
 			zap.String("vm-id", vmID.String()),
 		)
 		cctx, cancel := createDefaultCtx(ctx)
-		subnetID, err := baseWallet.P().IssueCreateSubnetTx(
+		subnetID, err := baseAXIAWallet.P().IssueCreateSubnetTx(
 			&secp256k1fx.OutputOwners{
 				Threshold: 1,
 				Addrs:     []ids.ShortID{testKeyAddr},
@@ -343,7 +343,7 @@ func (lc *localNetwork) restartNodesWithWhitelistedSubnets(ctx context.Context) 
 	return nil
 }
 
-func (lc *localNetwork) addSubnetValidators(ctx context.Context, baseWallet *refreshableWallet, validatorIDs []ids.NodeID) error {
+func (lc *localNetwork) addSubnetValidators(ctx context.Context, baseAXIAWallet *refreshableAXIAWallet, validatorIDs []ids.NodeID) error {
 	println()
 	color.Outf("{{green}}adding all nodes as subnet validator for each subnet{{/}}\n")
 	for vmID, vmInfo := range lc.customVMIDToInfo {
@@ -354,7 +354,7 @@ func (lc *localNetwork) addSubnetValidators(ctx context.Context, baseWallet *ref
 		)
 		for _, validatorID := range validatorIDs {
 			cctx, cancel := createDefaultCtx(ctx)
-			txID, err := baseWallet.P().IssueAddSubnetValidatorTx(
+			txID, err := baseAXIAWallet.P().IssueAddSubnetValidatorTx(
 				&validator.SubnetValidator{
 					Validator: validator.Validator{
 						NodeID: validatorID,
@@ -385,7 +385,7 @@ func (lc *localNetwork) addSubnetValidators(ctx context.Context, baseWallet *ref
 	return nil
 }
 
-func (lc *localNetwork) createBlockchains(ctx context.Context, baseWallet *refreshableWallet, testKeyAddr ids.ShortID) error {
+func (lc *localNetwork) createBlockchains(ctx context.Context, baseAXIAWallet *refreshableAXIAWallet, testKeyAddr ids.ShortID) error {
 	println()
 	color.Outf("{{green}}creating blockchain for each custom VM{{/}}\n")
 	for vmID, vmInfo := range lc.customVMIDToInfo {
@@ -398,7 +398,7 @@ func (lc *localNetwork) createBlockchains(ctx context.Context, baseWallet *refre
 			zap.Int("genesis-bytes", len(vmGenesisBytes)),
 		)
 		cctx, cancel := createDefaultCtx(ctx)
-		blockchainID, err := baseWallet.P().IssueCreateChainTx(
+		blockchainID, err := baseAXIAWallet.P().IssueCreateChainTx(
 			vmInfo.subnetID,
 			vmGenesisBytes,
 			vmID,

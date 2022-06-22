@@ -12,9 +12,9 @@ import (
 	"github.com/axiacoin/axia-network-v2/vms/avm"
 	"github.com/axiacoin/axia-network-v2/vms/platformvm"
 	"github.com/axiacoin/axia-network-v2/vms/secp256k1fx"
-	"github.com/axiacoin/axia-network-v2/wallet/chain/core"
-	"github.com/axiacoin/axia-network-v2/wallet/chain/swap"
-	"github.com/axiacoin/axia-network-v2/wallet/subnet/primary"
+	"github.com/axiacoin/axia-network-v2/axiawallet/chain/core"
+	"github.com/axiacoin/axia-network-v2/axiawallet/chain/swap"
+	"github.com/axiacoin/axia-network-v2/axiawallet/allychain/primary"
 )
 
 const defaultTimeout = time.Minute
@@ -26,8 +26,8 @@ func createDefaultCtx(ctx context.Context) (context.Context, context.CancelFunc)
 	return context.WithTimeout(ctx, defaultTimeout)
 }
 
-type refreshableWallet struct {
-	primary.Wallet
+type refreshableAXIAWallet struct {
+	primary.AXIAWallet
 	kc *secp256k1fx.Keychain
 
 	pBackend core.Backend
@@ -41,10 +41,10 @@ type refreshableWallet struct {
 	httpRPCEp string
 }
 
-// Creates a new wallet to work around the case where the new wallet object
+// Creates a new axiawallet to work around the case where the new axiawallet object
 // is not able to find previous transactions in the cache.
-// TODO: support tx backfilling in upstream wallet SDK.
-func createRefreshableWallet(ctx context.Context, httpRPCEp string, kc *secp256k1fx.Keychain) (*refreshableWallet, error) {
+// TODO: support tx backfilling in upstream axiawallet SDK.
+func createRefreshableAXIAWallet(ctx context.Context, httpRPCEp string, kc *secp256k1fx.Keychain) (*refreshableAXIAWallet, error) {
 	cctx, cancel := createDefaultCtx(ctx)
 	pCTX, xCTX, utxos, err := primary.FetchState(cctx, httpRPCEp, kc.Addrs)
 	cancel()
@@ -60,7 +60,7 @@ func createRefreshableWallet(ctx context.Context, httpRPCEp string, kc *secp256k
 
 	// need updates when reconnected
 	pClient := platformvm.NewClient(httpRPCEp)
-	pw := core.NewWallet(pBuilder, pSigner, pClient, pBackend)
+	pw := core.NewAXIAWallet(pBuilder, pSigner, pClient, pBackend)
 
 	swapChainID := xCTX.BlockchainID()
 	xUTXOs := primary.NewChainUTXOs(swapChainID, utxos)
@@ -70,10 +70,10 @@ func createRefreshableWallet(ctx context.Context, httpRPCEp string, kc *secp256k
 
 	// need updates when reconnected
 	xClient := avm.NewClient(httpRPCEp, "Swap")
-	xw := x.NewWallet(xBuilder, xSigner, xClient, xBackend)
+	xw := x.NewAXIAWallet(xBuilder, xSigner, xClient, xBackend)
 
-	return &refreshableWallet{
-		Wallet: primary.NewWallet(pw, xw),
+	return &refreshableAXIAWallet{
+		AXIAWallet: primary.NewAXIAWallet(pw, xw),
 		kc:     kc,
 
 		pBackend: pBackend,
@@ -90,16 +90,16 @@ func createRefreshableWallet(ctx context.Context, httpRPCEp string, kc *secp256k
 
 // Refreshes the txs and utxos in case of extended disconnection/restarts.
 // TODO: should be "primary.FetchState" again?
-// here we assume there's no contending wallet user, so just cache everything...
-func (w *refreshableWallet) refresh(httpRPCEp string) {
+// here we assume there's no contending axiawallet user, so just cache everything...
+func (w *refreshableAXIAWallet) refresh(httpRPCEp string) {
 	// need updates when reconnected
 	pClient := platformvm.NewClient(httpRPCEp)
-	pw := core.NewWallet(w.pBuilder, w.pSigner, pClient, w.pBackend)
+	pw := core.NewAXIAWallet(w.pBuilder, w.pSigner, pClient, w.pBackend)
 
 	// need updates when reconnected
 	xClient := avm.NewClient(httpRPCEp, "Swap")
-	xw := swap.NewWallet(w.xBuilder, w.xSigner, xClient, w.xBackend)
+	xw := swap.NewAXIAWallet(w.xBuilder, w.xSigner, xClient, w.xBackend)
 
-	w.Wallet = primary.NewWallet(pw, xw)
+	w.AXIAWallet = primary.NewAXIAWallet(pw, xw)
 	w.httpRPCEp = httpRPCEp
 }

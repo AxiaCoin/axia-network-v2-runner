@@ -17,7 +17,7 @@ import (
 type Client interface {
 	CoreChainAPI() platformvm.Client
 	SwapChainAPI() avm.Client
-	SwapChainWalletAPI() avm.WalletClient
+	SwapChainAXIAWalletAPI() avm.AXIAWalletClient
 	AXChainAPI() evm.Client
 	AXChainEthAPI() EthClient // ethclient websocket wrapper that adds mutexed calls, and lazy conn init (on first call)
 	InfoAPI() info.Client

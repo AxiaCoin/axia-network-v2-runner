@@ -259,7 +259,7 @@ func (lc *localNetwork) start(argCtx context.Context) {
 	}()
 
 	// start triggers a series of different time consuming actions
-	// (in case of subnets: create a wallet, create subnets, issue txs, etc.)
+	// (in case of subnets: create a axiawallet, create subnets, issue txs, etc.)
 	// We may need to cancel the context, for example if the client hits Ctrl-C
 	var ctx context.Context
 	ctx, lc.startCtxCancel = context.WithCancel(argCtx)

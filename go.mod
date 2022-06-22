@@ -7,6 +7,7 @@ require (
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.7.2
 	github.com/onsi/ginkgo/v2 v2.1.3
 	github.com/onsi/gomega v1.19.0
+	github.com/otiai10/copy v1.7.0
 	github.com/prometheus/client_golang v1.12.2
 	github.com/spf13/cobra v1.3.0
 	github.com/stretchr/testify v1.7.0
@@ -22,7 +23,8 @@ require (
 	github.com/NYTimes/gziphandler v1.1.1 // indirect
 	github.com/StackExchange/wmi v0.0.0-20180116203802-5d049714c4a6 // indirect
 	github.com/VictoriaMetrics/fastcache v1.10.0 // indirect
-	github.com/axiacoin/axia-network-v2 v0.1.6-0.20220621133300-b7536be7217b // indirect
+	github.com/axiacoin/axia-network-v2 v0.1.6-0.20220622080255-91f138575271 // indirect
+	github.com/axiacoin/axia-network-v2-coreth v0.1.6-0.20220622071652-7e7242e4d988 // indirect
 	github.com/benbjohnson/clock v1.3.0 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/btcsuite/btcd v0.21.0-beta // indirect
@@ -74,7 +76,6 @@ require (
 	github.com/nbutton23/zxcvbn-go v0.0.0-20180912185939-ae427f1e4c1d // indirect
 	github.com/oklog/run v1.1.0 // indirect
 	github.com/olekukonko/tablewriter v0.0.5 // indirect
-	github.com/otiai10/copy v1.7.0 // indirect
 	github.com/pelletier/go-toml v1.9.4 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/prometheus/client_model v0.2.0 // indirect
