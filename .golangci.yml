@@ -1,0 +1,13 @@
+# ref. https://golangci-lint.run/usage/configuration/
+run:
+  timeout: 5m
+  tests: false
+  skip-dirs:
+    - api/mocks
+    - local/mocks
+    - rpcpb
+  go: "1.17"
+
+linters:
+  disable:
+    - typecheck
