@@ -78,7 +78,7 @@ func (lt *localTestFlagCheckProcessCreator) NewNodeProcess(config node.Config, f
 
 // Returns an API client where:
 // * The Health API's Health method always returns healthy
-// * The CChainEthAPI's Close method may be called
+// * The AXChainEthAPI's Close method may be called
 // * Only the above 2 methods may be called
 // TODO have this method return an API Client that has all
 // APIs and methods implemented
@@ -91,7 +91,7 @@ func newMockAPISuccessful(ipAddr string, port uint16) api.Client {
 	ethClient.On("Close").Return()
 	client := &apimocks.Client{}
 	client.On("HealthAPI").Return(healthClient)
-	client.On("CChainEthAPI").Return(ethClient)
+	client.On("AXChainEthAPI").Return(ethClient)
 	return client
 }
 
@@ -163,7 +163,7 @@ func newLocalTestOneNodeCreator(assert *assert.Assertions, networkConfig network
 func (lt *localTestOneNodeCreator) NewNodeProcess(config node.Config, flags ...string) (NodeProcess, error) {
 	lt.assert.True(config.IsBeacon)
 	expectedConfig := lt.networkConfig.NodeConfigs[0]
-	lt.assert.EqualValues(expectedConfig.CChainConfigFile, config.CChainConfigFile)
+	lt.assert.EqualValues(expectedConfig.AXChainConfigFile, config.AXChainConfigFile)
 	lt.assert.EqualValues(expectedConfig.ConfigFile, config.ConfigFile)
 	lt.assert.EqualValues(expectedConfig.BinaryPath, config.BinaryPath)
 	lt.assert.EqualValues(expectedConfig.IsBeacon, config.IsBeacon)
@@ -1118,7 +1118,7 @@ func TestWriteFiles(t *testing.T) {
 	stakingCert := "stakingCert"
 	genesis := []byte("genesis")
 	configFile := "config file"
-	cChainConfigFile := "axchain config file"
+	axChainConfigFile := "axchain config file"
 	tmpDir, err := os.MkdirTemp("", "axia-network-runner-tests-*")
 	if err != nil {
 		t.Fatal(err)
@@ -1132,7 +1132,7 @@ func TestWriteFiles(t *testing.T) {
 	configFilePath := filepath.Join(tmpDir, configFileName)
 	configFileFlag := fmt.Sprintf("--%s=%v", config.ConfigFileKey, configFilePath)
 	chainConfigDir := filepath.Join(tmpDir, chainConfigSubDir)
-	cChainConfigPath := filepath.Join(tmpDir, chainConfigSubDir, "C", configFileName)
+	axChainConfigPath := filepath.Join(tmpDir, chainConfigSubDir, "AX", configFileName)
 	chainConfigDirFlag := fmt.Sprintf("--%s=%v", config.ChainConfigDirKey, chainConfigDir)
 
 	type test struct {
@@ -1182,7 +1182,7 @@ func TestWriteFiles(t *testing.T) {
 				StakingKey:       stakingKey,
 				StakingCert:      stakingCert,
 				ConfigFile:       configFile,
-				CChainConfigFile: cChainConfigFile,
+				AXChainConfigFile: axChainConfigFile,
 			},
 			expectedFlags: []string{
 				stakingKeyFlag,
@@ -1220,10 +1220,10 @@ func TestWriteFiles(t *testing.T) {
 				assert.NoError(err)
 				assert.Equal([]byte(configFile), gotConfigFile)
 			}
-			if len(tt.nodeConfig.CChainConfigFile) > 0 {
-				gotCChainConfigFile, err := os.ReadFile(cChainConfigPath)
+			if len(tt.nodeConfig.AXChainConfigFile) > 0 {
+				gotAXChainConfigFile, err := os.ReadFile(axChainConfigPath)
 				assert.NoError(err)
-				assert.Equal([]byte(cChainConfigFile), gotCChainConfigFile)
+				assert.Equal([]byte(axChainConfigFile), gotAXChainConfigFile)
 			}
 		})
 	}
@@ -1256,7 +1256,7 @@ func TestRemoveBeacon(t *testing.T) {
 // Returns an API client where:
 // * The Health API's Health method always returns an error after the
 //   given context is cancelled.
-// * The CChainEthAPI's Close method may be called
+// * The AXChainEthAPI's Close method may be called
 // * Only the above 2 methods may be called
 func newMockAPIHealthyBlocks(ipAddr string, port uint16) api.Client {
 	healthClient := &healthmocks.Client{}
@@ -1275,7 +1275,7 @@ func newMockAPIHealthyBlocks(ipAddr string, port uint16) api.Client {
 	ethClient.On("Close").Return()
 	client := &apimocks.Client{}
 	client.On("HealthAPI").Return(healthClient)
-	client.On("CChainEthAPI").Return(ethClient)
+	client.On("AXChainEthAPI").Return(ethClient)
 	return client
 }
 

@@ -60,7 +60,7 @@ type Config struct {
 	// May be nil.
 	ConfigFile string `json:"configFile"`
 	// May be nil.
-	CChainConfigFile string `json:"cChainConfigFile"`
+	AXChainConfigFile string `json:"axChainConfigFile"`
 	// Flags can hold additional flags for the node.
 	// It can be empty.
 	// The precedence of flags handling is:

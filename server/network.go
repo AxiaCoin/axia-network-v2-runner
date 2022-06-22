@@ -327,7 +327,7 @@ func (lc *localNetwork) updateSubnetInfo(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-	blockchains, err := node.GetAPIClient().PChainAPI().GetBlockchains(ctx)
+	blockchains, err := node.GetAPIClient().CoreChainAPI().GetBlockchains(ctx)
 	if err != nil {
 		return err
 	}

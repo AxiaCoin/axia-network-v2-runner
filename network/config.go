@@ -16,15 +16,15 @@ import (
 	"github.com/axiacoin/axia/utils/units"
 )
 
-var cChainConfig map[string]interface{}
+var axChainConfig map[string]interface{}
 
 const (
 	validatorStake         = units.MegaAxc
-	defaultCChainConfigStr = "{\"config\":{\"chainId\":43115,\"homesteadBlock\":0,\"daoForkBlock\":0,\"daoForkSupport\":true,\"eip150Block\":0,\"eip150Hash\":\"0x2086799aeebeae135c246c65021c82b4e15a2c451340993aacfd2751886514f0\",\"eip155Block\":0,\"eip158Block\":0,\"byzantiumBlock\":0,\"constantinopleBlock\":0,\"petersburgBlock\":0,\"istanbulBlock\":0,\"muirGlacierBlock\":0,\"apricotPhase1BlockTimestamp\":0,\"apricotPhase2BlockTimestamp\":0,\"apricotPhase3BlockTimestamp\":0,\"apricotPhase4BlockTimestamp\":0,\"apricotPhase5BlockTimestamp\":0},\"nonce\":\"0x0\",\"timestamp\":\"0x0\",\"extraData\":\"0x00\",\"gasLimit\":\"0x5f5e100\",\"difficulty\":\"0x0\",\"mixHash\":\"0x0000000000000000000000000000000000000000000000000000000000000000\",\"coinbase\":\"0x0000000000000000000000000000000000000000\",\"number\":\"0x0\",\"gasUsed\":\"0x0\",\"parentHash\":\"0x0000000000000000000000000000000000000000000000000000000000000000\"}"
+	defaultAXChainConfigStr = "{\"config\":{\"chainId\":43115,\"homesteadBlock\":0,\"daoForkBlock\":0,\"daoForkSupport\":true,\"eip150Block\":0,\"eip150Hash\":\"0x2086799aeebeae135c246c65021c82b4e15a2c451340993aacfd2751886514f0\",\"eip155Block\":0,\"eip158Block\":0,\"byzantiumBlock\":0,\"constantinopleBlock\":0,\"petersburgBlock\":0,\"istanbulBlock\":0,\"muirGlacierBlock\":0,\"apricotPhase1BlockTimestamp\":0,\"apricotPhase2BlockTimestamp\":0,\"apricotPhase3BlockTimestamp\":0,\"apricotPhase4BlockTimestamp\":0,\"apricotPhase5BlockTimestamp\":0},\"nonce\":\"0x0\",\"timestamp\":\"0x0\",\"extraData\":\"0x00\",\"gasLimit\":\"0x5f5e100\",\"difficulty\":\"0x0\",\"mixHash\":\"0x0000000000000000000000000000000000000000000000000000000000000000\",\"coinbase\":\"0x0000000000000000000000000000000000000000\",\"number\":\"0x0\",\"gasUsed\":\"0x0\",\"parentHash\":\"0x0000000000000000000000000000000000000000000000000000000000000000\"}"
 )
 
 func init() {
-	if err := json.Unmarshal([]byte(defaultCChainConfigStr), &cChainConfig); err != nil {
+	if err := json.Unmarshal([]byte(defaultAXChainConfigStr), &axChainConfig); err != nil {
 		panic(err)
 	}
 }
@@ -91,13 +91,13 @@ func (c *Config) Validate() error {
 // Return a genesis JSON where:
 // The nodes in [genesisVdrs] are validators.
 // The AXChain and SwapChain balances are given by
-// [cChainBalances] and [xChainBalances].
+// [axChainBalances] and [swapChainBalances].
 // Note that many of the genesis fields (i.e. reward addresses)
 // are randomly generated or hard-coded.
 func NewAxiaGenesis(
 	networkID uint32,
-	xChainBalances []AddrAndBalance,
-	cChainBalances []AddrAndBalance,
+	swapChainBalances []AddrAndBalance,
+	axChainBalances []AddrAndBalance,
 	genesisVdrs []ids.NodeID,
 ) ([]byte, error) {
 	switch networkID {
@@ -107,13 +107,13 @@ func NewAxiaGenesis(
 	switch {
 	case len(genesisVdrs) == 0:
 		return nil, errors.New("no genesis validators provided")
-	case len(xChainBalances)+len(cChainBalances) == 0:
+	case len(swapChainBalances)+len(axChainBalances) == 0:
 		return nil, errors.New("no genesis balances given")
 	}
 
 	// Address that controls stake doesn't matter -- generate it randomly
 	genesisVdrStakeAddr, _ := address.Format(
-		"X",
+		"Swap",
 		constants.GetHRP(networkID),
 		ids.GenerateTestShortID().Bytes(),
 	)
@@ -138,14 +138,14 @@ func NewAxiaGenesis(
 		Message:                    "hello world",
 	}
 
-	for _, xChainBal := range xChainBalances {
-		xChainAddr, _ := address.Format("X", constants.GetHRP(networkID), xChainBal.Addr[:])
+	for _, swapChainBal := range swapChainBalances {
+		swapChainAddr, _ := address.Format("Swap", constants.GetHRP(networkID), swapChainBal.Addr[:])
 		config.Allocations = append(
 			config.Allocations,
 			genesis.UnparsedAllocation{
 				ETHAddr:       "0x0000000000000000000000000000000000000000",
-				AXCAddr:      xChainAddr,
-				InitialAmount: xChainBal.Balance,
+				AXCAddr:      swapChainAddr,
+				InitialAmount: swapChainBal.Balance,
 				UnlockSchedule: []genesis.LockedAmount{
 					{
 						Amount:   validatorStake * uint64(len(genesisVdrs)), // Stake
@@ -157,26 +157,26 @@ func NewAxiaGenesis(
 	}
 
 	// Set initial AXChain balances.
-	cChainAllocs := map[string]interface{}{}
-	for _, cChainBal := range cChainBalances {
-		addrHex := fmt.Sprintf("0x%s", cChainBal.Addr.Hex())
-		balHex := fmt.Sprintf("0x%x", cChainBal.Balance)
-		cChainAllocs[addrHex] = map[string]interface{}{
+	axChainAllocs := map[string]interface{}{}
+	for _, axChainBal := range axChainBalances {
+		addrHex := fmt.Sprintf("0x%s", axChainBal.Addr.Hex())
+		balHex := fmt.Sprintf("0x%x", axChainBal.Balance)
+		axChainAllocs[addrHex] = map[string]interface{}{
 			"balance": balHex,
 		}
 	}
-	// avoid modifying original cChainConfig
-	localCChainConfig := map[string]interface{}{}
-	for k, v := range cChainConfig {
-		localCChainConfig[k] = v
+	// avoid modifying original axChainConfig
+	localAXChainConfig := map[string]interface{}{}
+	for k, v := range axChainConfig {
+		localAXChainConfig[k] = v
 	}
-	localCChainConfig["alloc"] = cChainAllocs
-	cChainConfigBytes, _ := json.Marshal(localCChainConfig)
-	config.CChainGenesis = string(cChainConfigBytes)
+	localAXChainConfig["alloc"] = axChainAllocs
+	axChainConfigBytes, _ := json.Marshal(localAXChainConfig)
+	config.AXChainGenesis = string(axChainConfigBytes)
 
 	// Set initial validators.
 	// Give staking rewards to random address.
-	rewardAddr, _ := address.Format("X", constants.GetHRP(networkID), ids.GenerateTestShortID().Bytes())
+	rewardAddr, _ := address.Format("Swap", constants.GetHRP(networkID), ids.GenerateTestShortID().Bytes())
 	for _, genesisVdr := range genesisVdrs {
 		config.InitialStakers = append(
 			config.InitialStakers,

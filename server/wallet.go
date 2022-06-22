@@ -62,14 +62,14 @@ func createRefreshableWallet(ctx context.Context, httpRPCEp string, kc *secp256k
 	pClient := platformvm.NewClient(httpRPCEp)
 	pw := p.NewWallet(pBuilder, pSigner, pClient, pBackend)
 
-	xChainID := xCTX.BlockchainID()
-	xUTXOs := primary.NewChainUTXOs(xChainID, utxos)
-	xBackend := x.NewBackend(xCTX, xChainID, xUTXOs)
+	swapChainID := xCTX.BlockchainID()
+	xUTXOs := primary.NewChainUTXOs(swapChainID, utxos)
+	xBackend := x.NewBackend(xCTX, swapChainID, xUTXOs)
 	xBuilder := x.NewBuilder(kc.Addrs, xBackend)
 	xSigner := x.NewSigner(kc, xBackend)
 
 	// need updates when reconnected
-	xClient := avm.NewClient(httpRPCEp, "X")
+	xClient := avm.NewClient(httpRPCEp, "Swap")
 	xw := x.NewWallet(xBuilder, xSigner, xClient, xBackend)
 
 	return &refreshableWallet{
@@ -97,7 +97,7 @@ func (w *refreshableWallet) refresh(httpRPCEp string) {
 	pw := p.NewWallet(w.pBuilder, w.pSigner, pClient, w.pBackend)
 
 	// need updates when reconnected
-	xClient := avm.NewClient(httpRPCEp, "X")
+	xClient := avm.NewClient(httpRPCEp, "Swap")
 	xw := x.NewWallet(w.xBuilder, w.xSigner, xClient, w.xBackend)
 
 	w.Wallet = primary.NewWallet(pw, xw)

@@ -59,7 +59,7 @@ var (
 		config.BootstrapIDsKey: {},
 	}
 	chainConfigSubDir  = "chainConfigs"
-	cChainConfigSubDir = filepath.Join(chainConfigSubDir, "C")
+	axChainConfigSubDir = filepath.Join(chainConfigSubDir, "AX")
 
 	snapshotsRelPath = filepath.Join(".axia-network-runner", "snapshots")
 )
@@ -140,11 +140,11 @@ func init() {
 			panic(err)
 		}
 		defaultNetworkConfig.NodeConfigs[i].StakingCert = string(stakingCert)
-		cChainConfig, err := fs.ReadFile(configsDir, fmt.Sprintf("node%d/cchain_config.json", i))
+		axChainConfig, err := fs.ReadFile(configsDir, fmt.Sprintf("node%d/axchain_config.json", i))
 		if err != nil {
 			panic(err)
 		}
-		defaultNetworkConfig.NodeConfigs[i].CChainConfigFile = string(cChainConfig)
+		defaultNetworkConfig.NodeConfigs[i].AXChainConfigFile = string(axChainConfig)
 		defaultNetworkConfig.NodeConfigs[i].IsBeacon = true
 	}
 
@@ -649,9 +649,9 @@ func (ln *localNetwork) removeNode(nodeName string) error {
 	_ = ln.bootstraps.RemoveByID(node.nodeID)
 
 	delete(ln.nodes, nodeName)
-	// cchain eth api uses a websocket connection and must be closed before stopping the node,
+	// axchain eth api uses a websocket connection and must be closed before stopping the node,
 	// to avoid errors logs at client
-	node.client.CChainEthAPI().Close()
+	node.client.AXChainEthAPI().Close()
 	if err := node.process.Stop(); err != nil {
 		return fmt.Errorf("error sending SIGTERM to node %s: %w", nodeName, err)
 	}
@@ -1082,12 +1082,12 @@ func writeFiles(genesis []byte, nodeRootDir string, nodeConfig *node.Config) ([]
 			contents:  []byte(nodeConfig.ConfigFile),
 		})
 	}
-	if len(nodeConfig.CChainConfigFile) != 0 {
+	if len(nodeConfig.AXChainConfigFile) != 0 {
 		files = append(files, file{
 			flagValue: filepath.Join(nodeRootDir, chainConfigSubDir),
-			path:      filepath.Join(nodeRootDir, cChainConfigSubDir, configFileName),
+			path:      filepath.Join(nodeRootDir, axChainConfigSubDir, configFileName),
 			pathKey:   config.ChainConfigDirKey,
-			contents:  []byte(nodeConfig.CChainConfigFile),
+			contents:  []byte(nodeConfig.AXChainConfigFile),
 		})
 	}
 	flags := []string{}

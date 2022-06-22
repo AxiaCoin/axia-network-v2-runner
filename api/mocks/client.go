@@ -46,8 +46,8 @@ func (_m *Client) AdminAPI() admin.Client {
 	return r0
 }
 
-// CChainAPI provides a mock function with given fields:
-func (_m *Client) CChainAPI() evm.Client {
+// AXChainAPI provides a mock function with given fields:
+func (_m *Client) AXChainAPI() evm.Client {
 	ret := _m.Called()
 
 	var r0 evm.Client
@@ -62,8 +62,8 @@ func (_m *Client) CChainAPI() evm.Client {
 	return r0
 }
 
-// CChainEthAPI provides a mock function with given fields:
-func (_m *Client) CChainEthAPI() api.EthClient {
+// AXChainEthAPI provides a mock function with given fields:
+func (_m *Client) AXChainEthAPI() api.EthClient {
 	ret := _m.Called()
 
 	var r0 api.EthClient
@@ -78,8 +78,8 @@ func (_m *Client) CChainEthAPI() api.EthClient {
 	return r0
 }
 
-// CChainIndexAPI provides a mock function with given fields:
-func (_m *Client) CChainIndexAPI() indexer.Client {
+// AXChainIndexAPI provides a mock function with given fields:
+func (_m *Client) AXChainIndexAPI() indexer.Client {
 	ret := _m.Called()
 
 	var r0 indexer.Client
@@ -158,8 +158,8 @@ func (_m *Client) KeystoreAPI() keystore.Client {
 	return r0
 }
 
-// PChainAPI provides a mock function with given fields:
-func (_m *Client) PChainAPI() platformvm.Client {
+// CoreChainAPI provides a mock function with given fields:
+func (_m *Client) CoreChainAPI() platformvm.Client {
 	ret := _m.Called()
 
 	var r0 platformvm.Client
@@ -174,8 +174,8 @@ func (_m *Client) PChainAPI() platformvm.Client {
 	return r0
 }
 
-// PChainIndexAPI provides a mock function with given fields:
-func (_m *Client) PChainIndexAPI() indexer.Client {
+// CoreChainIndexAPI provides a mock function with given fields:
+func (_m *Client) CoreChainIndexAPI() indexer.Client {
 	ret := _m.Called()
 
 	var r0 indexer.Client
@@ -190,8 +190,8 @@ func (_m *Client) PChainIndexAPI() indexer.Client {
 	return r0
 }
 
-// XChainAPI provides a mock function with given fields:
-func (_m *Client) XChainAPI() avm.Client {
+// SwapChainAPI provides a mock function with given fields:
+func (_m *Client) SwapChainAPI() avm.Client {
 	ret := _m.Called()
 
 	var r0 avm.Client
@@ -206,8 +206,8 @@ func (_m *Client) XChainAPI() avm.Client {
 	return r0
 }
 
-// XChainWalletAPI provides a mock function with given fields:
-func (_m *Client) XChainWalletAPI() avm.WalletClient {
+// SwapChainWalletAPI provides a mock function with given fields:
+func (_m *Client) SwapChainWalletAPI() avm.WalletClient {
 	ret := _m.Called()
 
 	var r0 avm.WalletClient

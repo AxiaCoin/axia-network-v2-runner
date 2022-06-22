@@ -576,7 +576,7 @@ type Config struct {
   // May be nil.
   ConfigFile string `json:"configFile"`
   // May be nil.
-  CChainConfigFile string `json:"cChainConfigFile"`
+  AXChainConfigFile string `json:"axChainConfigFile"`
   // Flags can hold additional flags for the node.
   // It can be empty.
   // The precedence of flags handling is:
@@ -604,14 +604,14 @@ You can create a custom Axia genesis with function `network.NewAxiaGenesis`:
 // Return a genesis JSON where:
 // The nodes in [genesisVdrs] are validators.
 // The AXChain and SwapChain balances are given by
-// [cChainBalances] and [xChainBalances].
+// [axChainBalances] and [swapChainBalances].
 // Note that many of the genesis fields (i.e. reward addresses)
 // are randomly generated or hard-coded.
 func NewAxiaGenesis(
   log logging.Logger,
   networkID uint32,
-  xChainBalances []AddrAndBalance,
-  cChainBalances []AddrAndBalance,
+  swapChainBalances []AddrAndBalance,
+  axChainBalances []AddrAndBalance,
   genesisVdrs []ids.ShortID,
 ) ([]byte, error)
 ```
