@@ -11,7 +11,7 @@ import (
 	"github.com/axiacoin/axia-network-v2/indexer"
 	"github.com/axiacoin/axia-network-v2/vms/avm"
 	"github.com/axiacoin/axia-network-v2/vms/platformvm"
-	"github.com/axiacoin/coreth/plugin/evm"
+	"github.com/axiacoin/axia-network-v2-coreth/plugin/evm"
 )
 
 // interface compliance

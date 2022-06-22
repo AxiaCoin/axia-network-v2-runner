@@ -8,7 +8,7 @@ import (
 
 	avm "github.com/axiacoin/axia-network-v2/vms/avm"
 
-	evm "github.com/axiacoin/coreth/plugin/evm"
+	evm "github.com/axiacoin/axia-network-v2-coreth/plugin/evm"
 
 	health "github.com/axiacoin/axia-network-v2/api/health"
 

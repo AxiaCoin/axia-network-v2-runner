@@ -4,7 +4,7 @@ go 1.17
 
 require (
 	github.com/axiacoin/axia v1.7.11
-	github.com/axiacoin/coreth v0.8.10-rc.7
+	github.com/axiacoin/axia-network-v2-coreth v0.8.10-rc.7
 	github.com/ethereum/go-ethereum v1.10.16
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.7.2
 	github.com/onsi/ginkgo/v2 v2.1.3

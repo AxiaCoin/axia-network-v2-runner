@@ -7,9 +7,9 @@ import (
 	"sync"
 
 	"github.com/axiacoin/axia-network-v2/ids"
-	"github.com/axiacoin/coreth/core/types"
-	"github.com/axiacoin/coreth/ethclient"
-	"github.com/axiacoin/coreth/interfaces"
+	"github.com/axiacoin/axia-network-v2-coreth/core/types"
+	"github.com/axiacoin/axia-network-v2-coreth/ethclient"
+	"github.com/axiacoin/axia-network-v2-coreth/interfaces"
 	"github.com/ethereum/go-ethereum/common"
 )
 
