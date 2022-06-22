@@ -102,7 +102,7 @@ To start a new Axia network with five nodes (a cluster):
 
 ```bash
 # replace execPath with the path to Axia on your machine
-# e.g., ${HOME}/go/src/github.com/axiacoin/axia/build/axia
+# e.g., ${HOME}/go/src/github.com/axiacoin/axia-network-v2/build/axia
 AXIA_EXEC_PATH="axia"
 
 curl -X POST -k http://localhost:8081/v1/control/start -d '{"execPath":"'${AXIA_EXEC_PATH}'","numNodes":5,"logLevel":"INFO"}'
@@ -251,7 +251,7 @@ axia-network-runner control remove-node \
 To restart a node (in this case, the one named `node1`):
 
 ```bash
-# e.g., ${HOME}/go/src/github.com/axiacoin/axia/build/axia
+# e.g., ${HOME}/go/src/github.com/axiacoin/axia-network-v2/build/axia
 AXIA_EXEC_PATH="axia"
 
 # Note that you can restart the node with a different binary by providing
@@ -270,7 +270,7 @@ axia-network-runner control restart-node \
 To add a node (in this case, a new node named `node99`):
 
 ```bash
-# e.g., ${HOME}/go/src/github.com/axiacoin/axia/build/axia
+# e.g., ${HOME}/go/src/github.com/axiacoin/axia-network-v2/build/axia
 AXIA_EXEC_PATH="axia"
 
 # Note that you can add the new node with a different binary by providing
@@ -308,7 +308,7 @@ See the [subnet](#network-runner-rpc-server-subnet-evm-example) section for deta
 `--plugin-dir`
 
 Axia exposes a "test peer", which you can attach to a node.
-(See [here](https://github.com/axiacoin/axia/blob/master/network/peer/test_peer.go) for more information.)
+(See [here](https://github.com/axiacoin/axia-network-v2/blob/master/network/peer/test_peer.go) for more information.)
 You can send messages through the test peer to the node it is attached to.
 
 To attach a test peer to a node (in this case, `node1`):
@@ -383,20 +383,20 @@ go install -v .
 subnet-cli create VMID subnetevm
 # srEXiWaHuhNyGwPUi444Tu47ZEDwxTWrbQiuD7FmgSAQ6X7Dy
 
-# download from https://github.com/axiacoin/axia/releases
+# download from https://github.com/axiacoin/axia-network-v2/releases
 # or build
-rm -rf ${HOME}/go/src/github.com/axiacoin/axia/build
+rm -rf ${HOME}/go/src/github.com/axiacoin/axia-network-v2/build
 cd ${HOME}/go/src/github.com/axiacoin/axia
 ./scripts/build.sh
 
 # ref. https://github.com/axiacoin/subnet-evm/blob/b69e47e0398b5237cda0422f6a32969e64bde346/scripts/run.sh
 cd ${HOME}/go/src/github.com/axiacoin/subnet-evm
 go build -v \
--o ${HOME}/go/src/github.com/axiacoin/axia/build/plugins/srEXiWaHuhNyGwPUi444Tu47ZEDwxTWrbQiuD7FmgSAQ6X7Dy \
+-o ${HOME}/go/src/github.com/axiacoin/axia-network-v2/build/plugins/srEXiWaHuhNyGwPUi444Tu47ZEDwxTWrbQiuD7FmgSAQ6X7Dy \
 ./plugin
 
 # make sure binaries are built
-find ${HOME}/go/src/github.com/axiacoin/axia/build
+find ${HOME}/go/src/github.com/axiacoin/axia-network-v2/build
 # for example
 # .../build
 # .../build/plugins
@@ -455,8 +455,8 @@ cat /tmp/subnet-evm.genesis.json
 
 ```bash
 # replace execPath with the path to Axia on your machine
-AXIA_EXEC_PATH="${HOME}/go/src/github.com/axiacoin/axia/build/axia"
-AXIA_PLUGIN_PATH="${HOME}/go/src/github.com/axiacoin/axia/build/plugins"
+AXIA_EXEC_PATH="${HOME}/go/src/github.com/axiacoin/axia-network-v2/build/axia"
+AXIA_PLUGIN_PATH="${HOME}/go/src/github.com/axiacoin/axia-network-v2/build/plugins"
 
 curl -X POST -k http://localhost:8081/v1/control/start -d '{"execPath":"'${AXIA_EXEC_PATH}'","numNodes":5,"logLevel":"INFO","pluginDir":"'${AXIA_PLUGIN_PATH}'","customVms":{"subnetevm":"/tmp/subnet-evm.genesis.json"}}'
 
@@ -505,19 +505,19 @@ go install -v .
 subnet-cli create VMID blobvm
 # kM6h4LYe3AcEU1MB2UNg6ubzAiDAALZzpVrbX8zn3hXF6Avd8
 
-# download from https://github.com/axiacoin/axia/releases
+# download from https://github.com/axiacoin/axia-network-v2/releases
 # or build
-rm -rf ${HOME}/go/src/github.com/axiacoin/axia/build
+rm -rf ${HOME}/go/src/github.com/axiacoin/axia-network-v2/build
 cd ${HOME}/go/src/github.com/axiacoin/axia
 ./scripts/build.sh
 
 cd ${HOME}/go/src/github.com/axiacoin/blobvm
 go build -v \
--o ${HOME}/go/src/github.com/axiacoin/axia/build/plugins/kM6h4LYe3AcEU1MB2UNg6ubzAiDAALZzpVrbX8zn3hXF6Avd8 \
+-o ${HOME}/go/src/github.com/axiacoin/axia-network-v2/build/plugins/kM6h4LYe3AcEU1MB2UNg6ubzAiDAALZzpVrbX8zn3hXF6Avd8 \
 ./cmd/blobvm
 
 # make sure binaries are built
-find ${HOME}/go/src/github.com/axiacoin/axia/build
+find ${HOME}/go/src/github.com/axiacoin/axia-network-v2/build
 # for example
 # .../build
 # .../build/plugins
@@ -535,8 +535,8 @@ cat /tmp/blobvm.genesis.json
 
 ```bash
 # replace execPath with the path to Axia on your machine
-AXIA_EXEC_PATH="${HOME}/go/src/github.com/axiacoin/axia/build/axia"
-AXIA_PLUGIN_PATH="${HOME}/go/src/github.com/axiacoin/axia/build/plugins"
+AXIA_EXEC_PATH="${HOME}/go/src/github.com/axiacoin/axia-network-v2/build/axia"
+AXIA_PLUGIN_PATH="${HOME}/go/src/github.com/axiacoin/axia-network-v2/build/plugins"
 
 curl -X POST -k http://localhost:8081/v1/control/start -d '{"execPath":"'${AXIA_EXEC_PATH}'","numNodes":5,"logLevel":"INFO","pluginDir":"'${AXIA_PLUGIN_PATH}'","customVms":{"blobvm":"/tmp/blobvm.genesis.json"}}'
 

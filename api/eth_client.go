@@ -6,7 +6,7 @@ import (
 	"math/big"
 	"sync"
 
-	"github.com/axiacoin/axia/ids"
+	"github.com/axiacoin/axia-network-v2/ids"
 	"github.com/axiacoin/coreth/core/types"
 	"github.com/axiacoin/coreth/ethclient"
 	"github.com/axiacoin/coreth/interfaces"

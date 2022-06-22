@@ -7,10 +7,10 @@ import (
 	"fmt"
 
 	"github.com/axiacoin/axia-network-runner/api"
-	"github.com/axiacoin/axia/config"
-	"github.com/axiacoin/axia/ids"
-	"github.com/axiacoin/axia/network/peer"
-	"github.com/axiacoin/axia/snow/networking/router"
+	"github.com/axiacoin/axia-network-v2/config"
+	"github.com/axiacoin/axia-network-v2/ids"
+	"github.com/axiacoin/axia-network-v2/network/peer"
+	"github.com/axiacoin/axia-network-v2/snow/networking/router"
 )
 
 // Node represents an Axia node

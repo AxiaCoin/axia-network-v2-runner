@@ -29,13 +29,13 @@ echo VERSION_2: ${VERSION_2}
 
 ############################
 # download axia
-# https://github.com/axiacoin/axia/releases
+# https://github.com/axiacoin/axia-network-v2/releases
 GOARCH=$(go env GOARCH)
 GOOS=$(go env GOOS)
-DOWNLOAD_URL=https://github.com/axiacoin/axia/releases/download/v${VERSION_1}/axia-linux-${GOARCH}-v${VERSION_1}.tar.gz
+DOWNLOAD_URL=https://github.com/axiacoin/axia-network-v2/releases/download/v${VERSION_1}/axia-linux-${GOARCH}-v${VERSION_1}.tar.gz
 DOWNLOAD_PATH=/tmp/axia.tar.gz
 if [[ ${GOOS} == "darwin" ]]; then
-  DOWNLOAD_URL=https://github.com/axiacoin/axia/releases/download/v${VERSION_1}/axia-macos-v${VERSION_1}.zip
+  DOWNLOAD_URL=https://github.com/axiacoin/axia-network-v2/releases/download/v${VERSION_1}/axia-macos-v${VERSION_1}.zip
   DOWNLOAD_PATH=/tmp/axia.zip
 fi
 
@@ -57,10 +57,10 @@ find /tmp/axia-v${VERSION_1}
 
 ############################
 # download axia
-# https://github.com/axiacoin/axia/releases
-DOWNLOAD_URL=https://github.com/axiacoin/axia/releases/download/v${VERSION_2}/axia-linux-${GOARCH}-v${VERSION_2}.tar.gz
+# https://github.com/axiacoin/axia-network-v2/releases
+DOWNLOAD_URL=https://github.com/axiacoin/axia-network-v2/releases/download/v${VERSION_2}/axia-linux-${GOARCH}-v${VERSION_2}.tar.gz
 if [[ ${GOOS} == "darwin" ]]; then
-  DOWNLOAD_URL=https://github.com/axiacoin/axia/releases/download/v${VERSION_2}/axia-macos-v${VERSION_2}.zip
+  DOWNLOAD_URL=https://github.com/axiacoin/axia-network-v2/releases/download/v${VERSION_2}/axia-macos-v${VERSION_2}.zip
   DOWNLOAD_PATH=/tmp/axia.zip
 fi
 

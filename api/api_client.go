@@ -3,14 +3,14 @@ package api
 import (
 	"fmt"
 
-	"github.com/axiacoin/axia/api/admin"
-	"github.com/axiacoin/axia/api/health"
-	"github.com/axiacoin/axia/api/info"
-	"github.com/axiacoin/axia/api/ipcs"
-	"github.com/axiacoin/axia/api/keystore"
-	"github.com/axiacoin/axia/indexer"
-	"github.com/axiacoin/axia/vms/avm"
-	"github.com/axiacoin/axia/vms/platformvm"
+	"github.com/axiacoin/axia-network-v2/api/admin"
+	"github.com/axiacoin/axia-network-v2/api/health"
+	"github.com/axiacoin/axia-network-v2/api/info"
+	"github.com/axiacoin/axia-network-v2/api/ipcs"
+	"github.com/axiacoin/axia-network-v2/api/keystore"
+	"github.com/axiacoin/axia-network-v2/indexer"
+	"github.com/axiacoin/axia-network-v2/vms/avm"
+	"github.com/axiacoin/axia-network-v2/vms/platformvm"
 	"github.com/axiacoin/coreth/plugin/evm"
 )
 

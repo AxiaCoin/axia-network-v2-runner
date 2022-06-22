@@ -11,9 +11,9 @@ import (
 	"github.com/axiacoin/axia-network-runner/local"
 	"github.com/axiacoin/axia-network-runner/network"
 	"github.com/axiacoin/axia-network-runner/network/node"
-	"github.com/axiacoin/axia/config"
-	"github.com/axiacoin/axia/staking"
-	"github.com/axiacoin/axia/utils/logging"
+	"github.com/axiacoin/axia-network-v2/config"
+	"github.com/axiacoin/axia-network-v2/staking"
+	"github.com/axiacoin/axia-network-v2/utils/logging"
 )
 
 const (
@@ -62,7 +62,7 @@ func main() {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-	binaryPath := fmt.Sprintf("%s%s", goPath, "/src/github.com/axiacoin/axia/build/axia")
+	binaryPath := fmt.Sprintf("%s%s", goPath, "/src/github.com/axiacoin/axia-network-v2/build/axia")
 	if err := run(log, binaryPath); err != nil {
 		log.Fatal("%s", err)
 		os.Exit(1)

@@ -6,7 +6,7 @@ import (
 	"io"
 	"sync"
 
-	"github.com/axiacoin/axia/utils/logging"
+	"github.com/axiacoin/axia-network-v2/utils/logging"
 )
 
 var supportedColors = []logging.Color{

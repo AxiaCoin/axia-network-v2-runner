@@ -16,10 +16,10 @@ import (
 	"github.com/axiacoin/axia-network-runner/network"
 	"github.com/axiacoin/axia-network-runner/pkg/color"
 	"github.com/axiacoin/axia-network-runner/rpcpb"
-	"github.com/axiacoin/axia/config"
-	"github.com/axiacoin/axia/ids"
-	"github.com/axiacoin/axia/network/peer"
-	"github.com/axiacoin/axia/utils/logging"
+	"github.com/axiacoin/axia-network-v2/config"
+	"github.com/axiacoin/axia-network-v2/ids"
+	"github.com/axiacoin/axia-network-v2/network/peer"
+	"github.com/axiacoin/axia-network-v2/utils/logging"
 	"go.uber.org/zap"
 )
 

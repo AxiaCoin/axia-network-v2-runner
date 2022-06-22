@@ -8,7 +8,7 @@ import (
 
 	common "github.com/ethereum/go-ethereum/common"
 
-	ids "github.com/axiacoin/axia/ids"
+	ids "github.com/axiacoin/axia-network-v2/ids"
 
 	interfaces "github.com/axiacoin/coreth/interfaces"
 

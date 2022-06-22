@@ -9,11 +9,11 @@ import (
 
 	"github.com/axiacoin/axia-network-runner/network/node"
 	"github.com/axiacoin/axia-network-runner/utils"
-	"github.com/axiacoin/axia/genesis"
-	"github.com/axiacoin/axia/ids"
-	"github.com/axiacoin/axia/utils/constants"
-	"github.com/axiacoin/axia/utils/formatting/address"
-	"github.com/axiacoin/axia/utils/units"
+	"github.com/axiacoin/axia-network-v2/genesis"
+	"github.com/axiacoin/axia-network-v2/ids"
+	"github.com/axiacoin/axia-network-v2/utils/constants"
+	"github.com/axiacoin/axia-network-v2/utils/formatting/address"
+	"github.com/axiacoin/axia-network-v2/utils/units"
 )
 
 var axChainConfig map[string]interface{}

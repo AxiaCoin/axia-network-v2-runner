@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/axiacoin/axia/utils/logging"
+	"github.com/axiacoin/axia-network-v2/utils/logging"
 )
 
 // TestColorAssignment tests that each color assignment is different and that it "wraps"

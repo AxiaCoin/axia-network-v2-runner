@@ -7,14 +7,14 @@ import (
 	"context"
 	"time"
 
-	"github.com/axiacoin/axia/ids"
-	"github.com/axiacoin/axia/utils/constants"
-	"github.com/axiacoin/axia/vms/avm"
-	"github.com/axiacoin/axia/vms/platformvm"
-	"github.com/axiacoin/axia/vms/secp256k1fx"
-	"github.com/axiacoin/axia/wallet/chain/core"
-	"github.com/axiacoin/axia/wallet/chain/swap"
-	"github.com/axiacoin/axia/wallet/subnet/primary"
+	"github.com/axiacoin/axia-network-v2/ids"
+	"github.com/axiacoin/axia-network-v2/utils/constants"
+	"github.com/axiacoin/axia-network-v2/vms/avm"
+	"github.com/axiacoin/axia-network-v2/vms/platformvm"
+	"github.com/axiacoin/axia-network-v2/vms/secp256k1fx"
+	"github.com/axiacoin/axia-network-v2/wallet/chain/core"
+	"github.com/axiacoin/axia-network-v2/wallet/chain/swap"
+	"github.com/axiacoin/axia-network-v2/wallet/subnet/primary"
 )
 
 const defaultTimeout = time.Minute

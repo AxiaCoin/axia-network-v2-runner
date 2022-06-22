@@ -7,8 +7,8 @@ import (
 	"io/fs"
 	"os"
 
-	"github.com/axiacoin/axia/ids"
-	"github.com/axiacoin/axia/staking"
+	"github.com/axiacoin/axia-network-v2/ids"
+	"github.com/axiacoin/axia-network-v2/staking"
 )
 
 const genesisNetworkIDKey = "networkID"
