@@ -12,8 +12,8 @@ import (
 	"github.com/axiacoin/axia/vms/avm"
 	"github.com/axiacoin/axia/vms/platformvm"
 	"github.com/axiacoin/axia/vms/secp256k1fx"
-	"github.com/axiacoin/axia/wallet/chain/p"
-	"github.com/axiacoin/axia/wallet/chain/x"
+	"github.com/axiacoin/axia/wallet/chain/core"
+	"github.com/axiacoin/axia/wallet/chain/swap"
 	"github.com/axiacoin/axia/wallet/subnet/primary"
 )
 
@@ -30,13 +30,13 @@ type refreshableWallet struct {
 	primary.Wallet
 	kc *secp256k1fx.Keychain
 
-	pBackend p.Backend
-	pBuilder p.Builder
-	pSigner  p.Signer
+	pBackend core.Backend
+	pBuilder core.Builder
+	pSigner  core.Signer
 
-	xBackend x.Backend
-	xBuilder x.Builder
-	xSigner  x.Signer
+	xBackend swap.Backend
+	xBuilder swap.Builder
+	xSigner  swap.Signer
 
 	httpRPCEp string
 }
@@ -54,19 +54,19 @@ func createRefreshableWallet(ctx context.Context, httpRPCEp string, kc *secp256k
 
 	pUTXOs := primary.NewChainUTXOs(constants.PlatformChainID, utxos)
 	pTXs := make(map[ids.ID]*platformvm.Tx)
-	pBackend := p.NewBackend(pCTX, pUTXOs, pTXs)
-	pBuilder := p.NewBuilder(kc.Addrs, pBackend)
-	pSigner := p.NewSigner(kc, pBackend)
+	pBackend := core.NewBackend(pCTX, pUTXOs, pTXs)
+	pBuilder := core.NewBuilder(kc.Addrs, pBackend)
+	pSigner := core.NewSigner(kc, pBackend)
 
 	// need updates when reconnected
 	pClient := platformvm.NewClient(httpRPCEp)
-	pw := p.NewWallet(pBuilder, pSigner, pClient, pBackend)
+	pw := core.NewWallet(pBuilder, pSigner, pClient, pBackend)
 
 	swapChainID := xCTX.BlockchainID()
 	xUTXOs := primary.NewChainUTXOs(swapChainID, utxos)
-	xBackend := x.NewBackend(xCTX, swapChainID, xUTXOs)
-	xBuilder := x.NewBuilder(kc.Addrs, xBackend)
-	xSigner := x.NewSigner(kc, xBackend)
+	xBackend := swap.NewBackend(xCTX, swapChainID, xUTXOs)
+	xBuilder := swap.NewBuilder(kc.Addrs, xBackend)
+	xSigner := swap.NewSigner(kc, xBackend)
 
 	// need updates when reconnected
 	xClient := avm.NewClient(httpRPCEp, "Swap")
@@ -94,11 +94,11 @@ func createRefreshableWallet(ctx context.Context, httpRPCEp string, kc *secp256k
 func (w *refreshableWallet) refresh(httpRPCEp string) {
 	// need updates when reconnected
 	pClient := platformvm.NewClient(httpRPCEp)
-	pw := p.NewWallet(w.pBuilder, w.pSigner, pClient, w.pBackend)
+	pw := core.NewWallet(w.pBuilder, w.pSigner, pClient, w.pBackend)
 
 	// need updates when reconnected
 	xClient := avm.NewClient(httpRPCEp, "Swap")
-	xw := x.NewWallet(w.xBuilder, w.xSigner, xClient, w.xBackend)
+	xw := swap.NewWallet(w.xBuilder, w.xSigner, xClient, w.xBackend)
 
 	w.Wallet = primary.NewWallet(pw, xw)
 	w.httpRPCEp = httpRPCEp
