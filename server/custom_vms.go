@@ -44,10 +44,10 @@ func (lc *localNetwork) installCustomVMs(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-	if err = lc.createSubnets(ctx, baseAXIAWallet, testKeyAddr); err != nil {
+	if err = lc.createAllychains(ctx, baseAXIAWallet, testKeyAddr); err != nil {
 		return err
 	}
-	if err = lc.restartNodesWithWhitelistedSubnets(ctx); err != nil {
+	if err = lc.restartNodesWithWhitelistedAllychains(ctx); err != nil {
 		return err
 	}
 
@@ -60,7 +60,7 @@ func (lc *localNetwork) installCustomVMs(ctx context.Context) error {
 		zap.String("address", testKeyAddr.String()),
 	)
 
-	if err = lc.addSubnetValidators(ctx, baseAXIAWallet, validatorIDs); err != nil {
+	if err = lc.addAllychainValidators(ctx, baseAXIAWallet, validatorIDs); err != nil {
 		return err
 	}
 	if err = lc.createBlockchains(ctx, baseAXIAWallet, testKeyAddr); err != nil {
@@ -69,7 +69,7 @@ func (lc *localNetwork) installCustomVMs(ctx context.Context) error {
 
 	println()
 	color.Outf("{{green}}checking the remaining balance of the base axiawallet{{/}}\n")
-	balances, err := baseAXIAWallet.P().Builder().GetBalance()
+	balances, err := baseAXIAWallet.Core().Builder().GetBalance()
 	if err != nil {
 		return err
 	}
@@ -98,7 +98,7 @@ func (lc *localNetwork) waitForCustomVMsReady(ctx context.Context) error {
 			p := filepath.Join(nodeInfo.LogDir, vmInfo.info.BlockchainId+".log")
 			zap.L().Info("checking log",
 				zap.String("vm-id", vmInfo.info.VmId),
-				zap.String("subnet-id", vmInfo.info.SubnetId),
+				zap.String("subnet-id", vmInfo.info.AllychainId),
 				zap.String("blockchain-id", vmInfo.info.BlockchainId),
 				zap.String("log-path", p),
 			)
@@ -111,7 +111,7 @@ func (lc *localNetwork) waitForCustomVMsReady(ctx context.Context) error {
 
 				zap.L().Info("log not found yet, retrying...",
 					zap.String("vm-id", vmInfo.info.VmId),
-					zap.String("subnet-id", vmInfo.info.SubnetId),
+					zap.String("subnet-id", vmInfo.info.AllychainId),
 					zap.String("blockchain-id", vmInfo.info.BlockchainId),
 					zap.String("log-path", p),
 					zap.Error(err),
@@ -163,8 +163,8 @@ func (lc *localNetwork) setupAXIAWallet(ctx context.Context, httpRPCEp string) (
 
 	println()
 	color.Outf("{{green}}check if the seed test key has enough balance to create validators and subnets{{/}}\n")
-	axcAssetID = baseAXIAWallet.P().AxcAssetID()
-	balances, err := baseAXIAWallet.P().Builder().GetBalance()
+	axcAssetID = baseAXIAWallet.Core().AXCAssetID()
+	balances, err := baseAXIAWallet.Core().Builder().GetBalance()
 	if err != nil {
 		return nil, ids.Empty, ids.ShortEmpty, err
 	}
@@ -221,7 +221,7 @@ func (lc *localNetwork) checkValidators(ctx context.Context, platformCli platfor
 			zap.String("node-id", nodeID.String()),
 		)
 		cctx, cancel = createDefaultCtx(ctx)
-		txID, err := baseAXIAWallet.P().IssueAddValidatorTx(
+		txID, err := baseAXIAWallet.Core().IssueAddValidatorTx(
 			&validator.Validator{
 				NodeID: nodeID,
 				Start:  uint64(time.Now().Add(10 * time.Second).Unix()),
@@ -249,7 +249,7 @@ func (lc *localNetwork) checkValidators(ctx context.Context, platformCli platfor
 	return validatorIDs, nil
 }
 
-func (lc *localNetwork) createSubnets(ctx context.Context, baseAXIAWallet *refreshableAXIAWallet, testKeyAddr ids.ShortID) error {
+func (lc *localNetwork) createAllychains(ctx context.Context, baseAXIAWallet *refreshableAXIAWallet, testKeyAddr ids.ShortID) error {
 	println()
 	color.Outf("{{green}}creating subnet for each custom VM{{/}}\n")
 	for vmName := range lc.customVMNameToGenesis {
@@ -262,7 +262,7 @@ func (lc *localNetwork) createSubnets(ctx context.Context, baseAXIAWallet *refre
 			zap.String("vm-id", vmID.String()),
 		)
 		cctx, cancel := createDefaultCtx(ctx)
-		subnetID, err := baseAXIAWallet.P().IssueCreateSubnetTx(
+		subnetID, err := baseAXIAWallet.Core().IssueCreateAllychainTx(
 			&secp256k1fx.OutputOwners{
 				Threshold: 1,
 				Addrs:     []ids.ShortID{testKeyAddr},
@@ -283,7 +283,7 @@ func (lc *localNetwork) createSubnets(ctx context.Context, baseAXIAWallet *refre
 			info: &rpcpb.CustomVmInfo{
 				VmName:       vmName,
 				VmId:         vmID.String(),
-				SubnetId:     subnetID.String(),
+				AllychainId:     subnetID.String(),
 				BlockchainId: "",
 			},
 			subnetID: subnetID,
@@ -293,31 +293,31 @@ func (lc *localNetwork) createSubnets(ctx context.Context, baseAXIAWallet *refre
 }
 
 // TODO: make this "restart" pattern more generic, so it can be used for "Restart" RPC
-func (lc *localNetwork) restartNodesWithWhitelistedSubnets(ctx context.Context) (err error) {
+func (lc *localNetwork) restartNodesWithWhitelistedAllychains(ctx context.Context) (err error) {
 	println()
-	color.Outf("{{green}}restarting each node with %s{{/}}\n", config.WhitelistedSubnetsKey)
-	whitelistedSubnetIDs := make([]string, 0, len(lc.customVMIDToInfo))
+	color.Outf("{{green}}restarting each node with %s{{/}}\n", config.WhitelistedAllychainsKey)
+	whitelistedAllychainIDs := make([]string, 0, len(lc.customVMIDToInfo))
 	for _, vmInfo := range lc.customVMIDToInfo {
-		whitelistedSubnetIDs = append(whitelistedSubnetIDs, vmInfo.subnetID.String())
+		whitelistedAllychainIDs = append(whitelistedAllychainIDs, vmInfo.subnetID.String())
 	}
-	sort.Strings(whitelistedSubnetIDs)
-	whitelistedSubnets := strings.Join(whitelistedSubnetIDs, ",")
+	sort.Strings(whitelistedAllychainIDs)
+	whitelistedAllychains := strings.Join(whitelistedAllychainIDs, ",")
 	for i := range lc.cfg.NodeConfigs {
 		nodeName := lc.cfg.NodeConfigs[i].Name
 
 		zap.L().Info("updating node config",
 			zap.String("node-name", nodeName),
-			zap.String("whitelisted-subnets", whitelistedSubnets),
+			zap.String("whitelisted-subnets", whitelistedAllychains),
 		)
 
-		// replace WhitelistedSubnetsKey flag
-		lc.cfg.NodeConfigs[i].ConfigFile, err = utils.SetJSONKey(lc.cfg.NodeConfigs[i].ConfigFile, config.WhitelistedSubnetsKey, whitelistedSubnets)
+		// replace WhitelistedAllychainsKey flag
+		lc.cfg.NodeConfigs[i].ConfigFile, err = utils.SetJSONKey(lc.cfg.NodeConfigs[i].ConfigFile, config.WhitelistedAllychainsKey, whitelistedAllychains)
 		if err != nil {
 			return err
 		}
 	}
 	zap.L().Info("restarting all nodes to whitelist subnet",
-		zap.Strings("whitelisted-subnets", whitelistedSubnetIDs),
+		zap.Strings("whitelisted-subnets", whitelistedAllychainIDs),
 	)
 	for _, nodeConfig := range lc.cfg.NodeConfigs {
 		nodeName := nodeConfig.Name
@@ -343,7 +343,7 @@ func (lc *localNetwork) restartNodesWithWhitelistedSubnets(ctx context.Context) 
 	return nil
 }
 
-func (lc *localNetwork) addSubnetValidators(ctx context.Context, baseAXIAWallet *refreshableAXIAWallet, validatorIDs []ids.NodeID) error {
+func (lc *localNetwork) addAllychainValidators(ctx context.Context, baseAXIAWallet *refreshableAXIAWallet, validatorIDs []ids.NodeID) error {
 	println()
 	color.Outf("{{green}}adding all nodes as subnet validator for each subnet{{/}}\n")
 	for vmID, vmInfo := range lc.customVMIDToInfo {
@@ -354,8 +354,8 @@ func (lc *localNetwork) addSubnetValidators(ctx context.Context, baseAXIAWallet 
 		)
 		for _, validatorID := range validatorIDs {
 			cctx, cancel := createDefaultCtx(ctx)
-			txID, err := baseAXIAWallet.P().IssueAddSubnetValidatorTx(
-				&validator.SubnetValidator{
+			txID, err := baseAXIAWallet.Core().IssueAddAllychainValidatorTx(
+				&validator.AllychainValidator{
 					Validator: validator.Validator{
 						NodeID: validatorID,
 
@@ -364,7 +364,7 @@ func (lc *localNetwork) addSubnetValidators(ctx context.Context, baseAXIAWallet 
 						End:   uint64(time.Now().Add(100 * time.Hour).Unix()),
 						Wght:  1000,
 					},
-					Subnet: vmInfo.subnetID,
+					Allychain: vmInfo.subnetID,
 				},
 				common.WithContext(cctx),
 				defaultPoll,
@@ -398,7 +398,7 @@ func (lc *localNetwork) createBlockchains(ctx context.Context, baseAXIAWallet *r
 			zap.Int("genesis-bytes", len(vmGenesisBytes)),
 		)
 		cctx, cancel := createDefaultCtx(ctx)
-		blockchainID, err := baseAXIAWallet.P().IssueCreateChainTx(
+		blockchainID, err := baseAXIAWallet.Core().IssueCreateChainTx(
 			vmInfo.subnetID,
 			vmGenesisBytes,
 			vmID,

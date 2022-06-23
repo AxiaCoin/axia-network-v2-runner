@@ -289,7 +289,7 @@ func (s *server) Start(ctx context.Context, req *rpcpb.StartRequest) (*rpcpb.Sta
 	var (
 		execPath           = req.GetExecPath()
 		numNodes           = req.GetNumNodes()
-		whitelistedSubnets = req.GetWhitelistedSubnets()
+		whitelistedAllychains = req.GetWhitelistedAllychains()
 		rootDataDir        = req.GetRootDataDir()
 		pid                = int32(os.Getpid())
 		globalNodeConfig   = req.GetGlobalNodeConfig()
@@ -312,7 +312,7 @@ func (s *server) Start(ctx context.Context, req *rpcpb.StartRequest) (*rpcpb.Sta
 	zap.L().Info("starting",
 		zap.String("execPath", execPath),
 		zap.Uint32("numNodes", numNodes),
-		zap.String("whitelistedSubnets", whitelistedSubnets),
+		zap.String("whitelistedAllychains", whitelistedAllychains),
 		zap.Int32("pid", pid),
 		zap.String("rootDataDir", rootDataDir),
 		zap.String("pluginDir", pluginDir),
@@ -332,7 +332,7 @@ func (s *server) Start(ctx context.Context, req *rpcpb.StartRequest) (*rpcpb.Sta
 		execPath:            execPath,
 		rootDataDir:         rootDataDir,
 		numNodes:            numNodes,
-		whitelistedSubnets:  whitelistedSubnets,
+		whitelistedAllychains:  whitelistedAllychains,
 		redirectNodesOutput: s.cfg.RedirectNodesOutput,
 		pluginDir:           pluginDir,
 		customVMs:           customVMs,
@@ -560,7 +560,7 @@ func (s *server) AddNode(ctx context.Context, req *rpcpb.AddNodeRequest) (*rpcpb
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
-	var whitelistedSubnets, pluginDir string
+	var whitelistedAllychains, pluginDir string
 
 	if _, exists := s.network.nodeInfos[req.Name]; exists {
 		return nil, fmt.Errorf("node with name %s already exists", req.Name)
@@ -584,7 +584,7 @@ func (s *server) AddNode(ctx context.Context, req *rpcpb.AddNodeRequest) (*rpcpb
 	}
 
 	// use same configs from other nodes
-	whitelistedSubnets = s.network.options.whitelistedSubnets
+	whitelistedAllychains = s.network.options.whitelistedAllychains
 	pluginDir = s.network.options.pluginDir
 
 	rootDataDir := s.clusterInfo.RootDataDir
@@ -608,7 +608,7 @@ func (s *server) AddNode(ctx context.Context, req *rpcpb.AddNodeRequest) (*rpcpb
 	if err != nil {
 		return nil, fmt.Errorf("failed merging provided configs: %w", err)
 	}
-	configFile, err := createConfigFileString(mergedConfig, logDir, dbDir, pluginDir, whitelistedSubnets)
+	configFile, err := createConfigFileString(mergedConfig, logDir, dbDir, pluginDir, whitelistedAllychains)
 	if err != nil {
 		return nil, fmt.Errorf("failed to generate json node config string: %w", err)
 	}
@@ -695,8 +695,8 @@ func (s *server) RestartNode(ctx context.Context, req *rpcpb.RestartNodeRequest)
 	if req.GetExecPath() != "" {
 		nodeInfo.ExecPath = req.GetExecPath()
 	}
-	if req.GetWhitelistedSubnets() != "" {
-		nodeInfo.WhitelistedSubnets = req.GetWhitelistedSubnets()
+	if req.GetWhitelistedAllychains() != "" {
+		nodeInfo.WhitelistedAllychains = req.GetWhitelistedAllychains()
 	}
 	if req.GetRootDataDir() != "" {
 		nodeInfo.DbDir = filepath.Join(req.GetRootDataDir(), req.Name, "db-dir")
@@ -713,7 +713,7 @@ func (s *server) RestartNode(ctx context.Context, req *rpcpb.RestartNodeRequest)
 		nodeInfo.LogDir,
 		nodeInfo.DbDir,
 		nodeInfo.PluginDir,
-		nodeInfo.WhitelistedSubnets,
+		nodeInfo.WhitelistedAllychains,
 	)
 	if err != nil {
 		return nil, fmt.Errorf("failed to generate json node config string: %w", err)

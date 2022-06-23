@@ -108,8 +108,8 @@ func (c *client) Start(ctx context.Context, execPath string, opts ...OpOption) (
 		ExecPath: execPath,
 		NumNodes: &ret.numNodes,
 	}
-	if ret.whitelistedSubnets != "" {
-		req.WhitelistedSubnets = &ret.whitelistedSubnets
+	if ret.whitelistedAllychains != "" {
+		req.WhitelistedAllychains = &ret.whitelistedAllychains
 	}
 	if ret.rootDataDir != "" {
 		req.RootDataDir = &ret.rootDataDir
@@ -210,8 +210,8 @@ func (c *client) AddNode(ctx context.Context, name string, execPath string, opts
 		Name:         name,
 		StartRequest: &rpcpb.StartRequest{},
 	}
-	if ret.whitelistedSubnets != "" {
-		req.StartRequest.WhitelistedSubnets = &ret.whitelistedSubnets
+	if ret.whitelistedAllychains != "" {
+		req.StartRequest.WhitelistedAllychains = &ret.whitelistedAllychains
 	}
 	if ret.execPath != "" {
 		req.StartRequest.ExecPath = ret.execPath
@@ -237,8 +237,8 @@ func (c *client) RestartNode(ctx context.Context, name string, opts ...OpOption)
 	if ret.execPath != "" {
 		req.ExecPath = &ret.execPath
 	}
-	if ret.whitelistedSubnets != "" {
-		req.WhitelistedSubnets = &ret.whitelistedSubnets
+	if ret.whitelistedAllychains != "" {
+		req.WhitelistedAllychains = &ret.whitelistedAllychains
 	}
 	if ret.rootDataDir != "" {
 		req.RootDataDir = &ret.rootDataDir
@@ -297,7 +297,7 @@ func (c *client) Close() error {
 type Op struct {
 	numNodes           uint32
 	execPath           string
-	whitelistedSubnets string
+	whitelistedAllychains string
 	globalNodeConfig   string
 	rootDataDir        string
 	pluginDir          string
@@ -331,9 +331,9 @@ func WithExecPath(execPath string) OpOption {
 	}
 }
 
-func WithWhitelistedSubnets(whitelistedSubnets string) OpOption {
+func WithWhitelistedAllychains(whitelistedAllychains string) OpOption {
 	return func(op *Op) {
-		op.whitelistedSubnets = whitelistedSubnets
+		op.whitelistedAllychains = whitelistedAllychains
 	}
 }
 

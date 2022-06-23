@@ -13,7 +13,7 @@ func TestEvalConfig(t *testing.T) {
 	// test using the default config...
 	tLogDir := "/tmp/log"
 	tDbDir := "/tmp/db"
-	tWhitelistedSubnets := "someSubnet"
+	tWhitelistedAllychains := "someAllychain"
 	tPluginDir := "/tmp/plugins"
 
 	var defaultConfig, globalConfig map[string]interface{}
@@ -23,7 +23,7 @@ func TestEvalConfig(t *testing.T) {
 
 	config, err := mergeNodeConfig(defaultConfig, globalConfig, "")
 	assert.NoError(err)
-	finalJSON, err := createConfigFileString(config, tLogDir, tDbDir, tPluginDir, tWhitelistedSubnets)
+	finalJSON, err := createConfigFileString(config, tLogDir, tDbDir, tPluginDir, tWhitelistedAllychains)
 	assert.NoError(err)
 
 	var controlMap map[string]interface{}
@@ -41,7 +41,7 @@ func TestEvalConfig(t *testing.T) {
 	assert.Equal(controlMap["log-level"], defaultConfig["log-level"])
 	assert.Equal(controlMap["log-dir"], tLogDir)
 	assert.Equal(controlMap["db-dir"], tDbDir)
-	assert.Equal(controlMap["whitelisted-subnets"], tWhitelistedSubnets)
+	assert.Equal(controlMap["whitelisted-subnets"], tWhitelistedAllychains)
 
 	// now test a global provided config
 	globalConfigJSON := `{
@@ -64,7 +64,7 @@ func TestEvalConfig(t *testing.T) {
 
 	config, err = mergeNodeConfig(defaultConfig, globalConfig, "")
 	assert.NoError(err)
-	finalJSON, err = createConfigFileString(config, tLogDir, tDbDir, tPluginDir, tWhitelistedSubnets)
+	finalJSON, err = createConfigFileString(config, tLogDir, tDbDir, tPluginDir, tWhitelistedAllychains)
 	assert.NoError(err)
 
 	err = json.Unmarshal([]byte(finalJSON), &controlMap)
@@ -78,7 +78,7 @@ func TestEvalConfig(t *testing.T) {
 	assert.Equal(controlMap["log-level"], "debug")
 	assert.Equal(controlMap["log-dir"], tLogDir)
 	assert.Equal(controlMap["db-dir"], tDbDir)
-	assert.Equal(controlMap["whitelisted-subnets"], tWhitelistedSubnets)
+	assert.Equal(controlMap["whitelisted-subnets"], tWhitelistedAllychains)
 
 	// these ones should be ignored as they are hard-set by the code and required by the runner
 	assert.Equal(controlMap["public-ip"], "127.0.0.1")
@@ -88,7 +88,7 @@ func TestEvalConfig(t *testing.T) {
 	customConfigJSON := globalConfigJSON
 	config, err = mergeNodeConfig(defaultConfig, map[string]interface{}{}, customConfigJSON)
 	assert.NoError(err)
-	finalJSON, err = createConfigFileString(config, tLogDir, tDbDir, tPluginDir, tWhitelistedSubnets)
+	finalJSON, err = createConfigFileString(config, tLogDir, tDbDir, tPluginDir, tWhitelistedAllychains)
 	assert.NoError(err)
 
 	err = json.Unmarshal([]byte(finalJSON), &controlMap)
@@ -102,7 +102,7 @@ func TestEvalConfig(t *testing.T) {
 	assert.Equal(controlMap["log-level"], "debug")
 	assert.Equal(controlMap["log-dir"], tLogDir)
 	assert.Equal(controlMap["db-dir"], tDbDir)
-	assert.Equal(controlMap["whitelisted-subnets"], tWhitelistedSubnets)
+	assert.Equal(controlMap["whitelisted-subnets"], tWhitelistedAllychains)
 	// these ones should be ignored as they are hard-set by the code and required by the runner
 	assert.Equal(controlMap["public-ip"], "127.0.0.1")
 	assert.NotEqual(controlMap["http-port"], 777)
@@ -130,7 +130,7 @@ func TestEvalConfig(t *testing.T) {
 
 	config, err = mergeNodeConfig(defaultConfig, globalConfig, customConfigJSON)
 	assert.NoError(err)
-	finalJSON, err = createConfigFileString(config, tLogDir, tDbDir, tPluginDir, tWhitelistedSubnets)
+	finalJSON, err = createConfigFileString(config, tLogDir, tDbDir, tPluginDir, tWhitelistedAllychains)
 	assert.NoError(err)
 
 	err = json.Unmarshal([]byte(finalJSON), &controlMap)
@@ -144,7 +144,7 @@ func TestEvalConfig(t *testing.T) {
 	assert.Equal(controlMap["log-level"], "debug")
 	assert.Equal(controlMap["log-dir"], tLogDir)
 	assert.Equal(controlMap["db-dir"], tDbDir)
-	assert.Equal(controlMap["whitelisted-subnets"], tWhitelistedSubnets)
+	assert.Equal(controlMap["whitelisted-subnets"], tWhitelistedAllychains)
 	// ...as well as the ones only in the global config
 	assert.Equal(controlMap["uptime-requirement"], float64(98.5))
 	// these ones should be ignored as they are hard-set by the code and required by the runner

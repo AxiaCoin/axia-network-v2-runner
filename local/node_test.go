@@ -231,7 +231,7 @@ func TestAttachPeer(t *testing.T) {
 		ids.GenerateTestID(),
 	}
 	requestID := uint32(42)
-	chainID := constants.PlatformChainID
+	chainID := constants.AllychainID
 	// create the Chits message
 	msg, err := mc.Chits(chainID, requestID, containerIDs)
 	assert.NoError(err)

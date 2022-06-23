@@ -1,8 +1,10 @@
 module github.com/axiacoin/axia-network-runner
 
-go 1.17
+go 1.18
 
 require (
+	github.com/axiacoin/axia-network-v2 v0.1.1-0.20220623043428-7dee82b913a1
+	github.com/axiacoin/axia-network-v2-coreth v0.1.1-0.20220623043039-d9a974d64672
 	github.com/ethereum/go-ethereum v1.10.16
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.7.2
 	github.com/onsi/ginkgo/v2 v2.1.3
@@ -23,8 +25,6 @@ require (
 	github.com/NYTimes/gziphandler v1.1.1 // indirect
 	github.com/StackExchange/wmi v0.0.0-20180116203802-5d049714c4a6 // indirect
 	github.com/VictoriaMetrics/fastcache v1.10.0 // indirect
-	github.com/axiacoin/axia-network-v2 v0.1.6-0.20220622080255-91f138575271 // indirect
-	github.com/axiacoin/axia-network-v2-coreth v0.1.6-0.20220622071652-7e7242e4d988 // indirect
 	github.com/benbjohnson/clock v1.3.0 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/btcsuite/btcd v0.21.0-beta // indirect

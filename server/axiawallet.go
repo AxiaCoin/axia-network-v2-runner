@@ -52,7 +52,7 @@ func createRefreshableAXIAWallet(ctx context.Context, httpRPCEp string, kc *secp
 		return nil, err
 	}
 
-	pUTXOs := primary.NewChainUTXOs(constants.PlatformChainID, utxos)
+	pUTXOs := primary.NewChainUTXOs(constants.CoreChainID, utxos)
 	pTXs := make(map[ids.ID]*platformvm.Tx)
 	pBackend := core.NewBackend(pCTX, pUTXOs, pTXs)
 	pBuilder := core.NewBuilder(kc.Addrs, pBackend)
@@ -70,7 +70,7 @@ func createRefreshableAXIAWallet(ctx context.Context, httpRPCEp string, kc *secp
 
 	// need updates when reconnected
 	xClient := avm.NewClient(httpRPCEp, "Swap")
-	xw := x.NewAXIAWallet(xBuilder, xSigner, xClient, xBackend)
+	xw := swap.NewAXIAWallet(xBuilder, xSigner, xClient, xBackend)
 
 	return &refreshableAXIAWallet{
 		AXIAWallet: primary.NewAXIAWallet(pw, xw),

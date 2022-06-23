@@ -87,7 +87,7 @@ type localNetworkOptions struct {
 	execPath            string
 	rootDataDir         string
 	numNodes            uint32
-	whitelistedSubnets  string
+	whitelistedAllychains  string
 	redirectNodesOutput bool
 	globalNodeConfig    string
 
@@ -179,7 +179,7 @@ func (lc *localNetwork) createConfig() error {
 			buildDir = filepath.Dir(pluginDir)
 		}
 
-		cfg.NodeConfigs[i].ConfigFile, err = createConfigFileString(mergedConfig, logDir, dbDir, buildDir, lc.options.whitelistedSubnets)
+		cfg.NodeConfigs[i].ConfigFile, err = createConfigFileString(mergedConfig, logDir, dbDir, buildDir, lc.options.whitelistedAllychains)
 		if err != nil {
 			return err
 		}
@@ -227,7 +227,7 @@ func mergeNodeConfig(baseConfig map[string]interface{}, globalConfig map[string]
 }
 
 // createConfigFileString finalizes the config setup and returns the node config JSON string
-func createConfigFileString(configFileMap map[string]interface{}, logDir string, dbDir string, buildDir string, whitelistedSubnets string) (string, error) {
+func createConfigFileString(configFileMap map[string]interface{}, logDir string, dbDir string, buildDir string, whitelistedAllychains string) (string, error) {
 	// add (or overwrite, if given) the following entries
 	if configFileMap[config.LogsDirKey] != "" {
 		zap.L().Warn("ignoring config file entry provided; the network runner needs to set its own", zap.String("entry", config.LogsDirKey))
@@ -242,8 +242,8 @@ func createConfigFileString(configFileMap map[string]interface{}, logDir string,
 	}
 	// need to whitelist subnet ID to create custom VM chain
 	// ref. vms/platformvm/createChain
-	if whitelistedSubnets != "" {
-		configFileMap[config.WhitelistedSubnetsKey] = whitelistedSubnets
+	if whitelistedAllychains != "" {
+		configFileMap[config.WhitelistedAllychainsKey] = whitelistedAllychains
 	}
 
 	finalJSON, err := json.Marshal(configFileMap)
@@ -309,7 +309,7 @@ func (lc *localNetwork) loadSnapshotWait(ctx context.Context, loadSnapshotReadyC
 		lc.startErrCh <- err
 		return
 	}
-	if err := lc.updateSubnetInfo(ctx); err != nil {
+	if err := lc.updateAllychainInfo(ctx); err != nil {
 		lc.startErrCh <- err
 		return
 	}
@@ -322,7 +322,7 @@ func (lc *localNetwork) loadSnapshotWait(ctx context.Context, loadSnapshotReadyC
 	close(loadSnapshotReadyCh)
 }
 
-func (lc *localNetwork) updateSubnetInfo(ctx context.Context) error {
+func (lc *localNetwork) updateAllychainInfo(ctx context.Context) error {
 	node, err := lc.nw.GetNode(lc.nodeNames[0])
 	if err != nil {
 		return err
@@ -337,10 +337,10 @@ func (lc *localNetwork) updateSubnetInfo(ctx context.Context) error {
 				info: &rpcpb.CustomVmInfo{
 					VmName:       blockchain.Name,
 					VmId:         blockchain.VMID.String(),
-					SubnetId:     blockchain.SubnetID.String(),
+					AllychainId:     blockchain.AllychainID.String(),
 					BlockchainId: blockchain.ID.String(),
 				},
-				subnetID:     blockchain.SubnetID,
+				subnetID:     blockchain.AllychainID,
 				blockchainID: blockchain.ID,
 			}
 		}
@@ -387,7 +387,7 @@ func (lc *localNetwork) updateNodeInfo() error {
 		node := nodes[name]
 		configFile := []byte(node.GetConfigFile())
 		var pluginDir string
-		var whitelistedSubnets string
+		var whitelistedAllychains string
 		var configFileMap map[string]interface{}
 		if err := json.Unmarshal(configFile, &configFileMap); err != nil {
 			return err
@@ -403,11 +403,11 @@ func (lc *localNetwork) updateNodeInfo() error {
 				return fmt.Errorf("unexpected type for %q expected string got %T", config.BuildDirKey, buildDirIntf)
 			}
 		}
-		whitelistedSubnetsIntf, ok := configFileMap[config.WhitelistedSubnetsKey]
+		whitelistedAllychainsIntf, ok := configFileMap[config.WhitelistedAllychainsKey]
 		if ok {
-			whitelistedSubnets, ok = whitelistedSubnetsIntf.(string)
+			whitelistedAllychains, ok = whitelistedAllychainsIntf.(string)
 			if !ok {
-				return fmt.Errorf("unexpected type for %q expected string got %T", config.WhitelistedSubnetsKey, whitelistedSubnetsIntf)
+				return fmt.Errorf("unexpected type for %q expected string got %T", config.WhitelistedAllychainsKey, whitelistedAllychainsIntf)
 			}
 		}
 
@@ -420,7 +420,7 @@ func (lc *localNetwork) updateNodeInfo() error {
 			DbDir:              node.GetDbDir(),
 			Config:             []byte(node.GetConfigFile()),
 			PluginDir:          pluginDir,
-			WhitelistedSubnets: whitelistedSubnets,
+			WhitelistedAllychains: whitelistedAllychains,
 		}
 	}
 	return nil

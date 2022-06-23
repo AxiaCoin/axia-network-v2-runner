@@ -27,7 +27,7 @@ func init() {
 
 var (
 	logLevel           string
-	whitelistedSubnets string
+	whitelistedAllychains string
 	endpoint           string
 	dialTimeout        time.Duration
 	requestTimeout     time.Duration
@@ -133,7 +133,7 @@ func startFunc(cmd *cobra.Command, args []string) error {
 	opts := []client.OpOption{
 		client.WithNumNodes(numNodes),
 		client.WithPluginDir(pluginDir),
-		client.WithWhitelistedSubnets(whitelistedSubnets),
+		client.WithWhitelistedAllychains(whitelistedAllychains),
 	}
 
 	if globalNodeConfig != "" {
@@ -450,7 +450,7 @@ func newRestartNodeCommand() *cobra.Command {
 		"axia binary path",
 	)
 	cmd.PersistentFlags().StringVar(
-		&whitelistedSubnets,
+		&whitelistedAllychains,
 		"whitelisted-subnets",
 		"",
 		"whitelisted subnets (comma-separated)",
@@ -470,7 +470,7 @@ func restartNodeFunc(cmd *cobra.Command, args []string) error {
 		ctx,
 		nodeName,
 		client.WithExecPath(axiaBinPath),
-		client.WithWhitelistedSubnets(whitelistedSubnets),
+		client.WithWhitelistedAllychains(whitelistedAllychains),
 	)
 	cancel()
 	if err != nil {

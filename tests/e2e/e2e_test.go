@@ -295,7 +295,7 @@ var _ = ginkgo.Describe("[Start/Remove/Restart/Add/Stop]", func() {
 				ids.GenerateTestID(),
 			}
 			requestID := uint32(42)
-			chainID := constants.PlatformChainID
+			chainID := constants.AllychainID
 			msg, err := mc.Chits(chainID, requestID, containerIDs)
 			gomega.Ω(err).Should(gomega.BeNil())
 

@@ -222,7 +222,7 @@ type CustomVmInfo struct {
 	VmId string `protobuf:"bytes,2,opt,name=vm_id,json=vmId,proto3" json:"vm_id,omitempty"`
 	// Create subnet transaction ID -- subnet ID.
 	// The subnet ID must be whitelisted by the axia node.
-	SubnetId string `protobuf:"bytes,3,opt,name=subnet_id,json=subnetId,proto3" json:"subnet_id,omitempty"`
+	AllychainId string `protobuf:"bytes,3,opt,name=subnet_id,json=subnetId,proto3" json:"subnet_id,omitempty"`
 	// Create blockchain transaction ID -- blockchain ID>
 	// The blockchain ID is used for RPC endpoints for the custom VM.
 	BlockchainId string `protobuf:"bytes,4,opt,name=blockchain_id,json=blockchainId,proto3" json:"blockchain_id,omitempty"`
@@ -274,9 +274,9 @@ func (x *CustomVmInfo) GetVmId() string {
 	return ""
 }
 
-func (x *CustomVmInfo) GetSubnetId() string {
+func (x *CustomVmInfo) GetAllychainId() string {
 	if x != nil {
-		return x.SubnetId
+		return x.AllychainId
 	}
 	return ""
 }
@@ -300,7 +300,7 @@ type NodeInfo struct {
 	LogDir             string `protobuf:"bytes,5,opt,name=log_dir,json=logDir,proto3" json:"log_dir,omitempty"`
 	DbDir              string `protobuf:"bytes,6,opt,name=db_dir,json=dbDir,proto3" json:"db_dir,omitempty"`
 	PluginDir          string `protobuf:"bytes,7,opt,name=plugin_dir,json=pluginDir,proto3" json:"plugin_dir,omitempty"`
-	WhitelistedSubnets string `protobuf:"bytes,8,opt,name=whitelisted_subnets,json=whitelistedSubnets,proto3" json:"whitelisted_subnets,omitempty"`
+	WhitelistedAllychains string `protobuf:"bytes,8,opt,name=whitelisted_subnets,json=whitelistedAllychains,proto3" json:"whitelisted_subnets,omitempty"`
 	Config             []byte `protobuf:"bytes,9,opt,name=config,proto3" json:"config,omitempty"`
 }
 
@@ -385,9 +385,9 @@ func (x *NodeInfo) GetPluginDir() string {
 	return ""
 }
 
-func (x *NodeInfo) GetWhitelistedSubnets() string {
+func (x *NodeInfo) GetWhitelistedAllychains() string {
 	if x != nil {
-		return x.WhitelistedSubnets
+		return x.WhitelistedAllychains
 	}
 	return ""
 }
@@ -500,7 +500,7 @@ type StartRequest struct {
 
 	ExecPath           string  `protobuf:"bytes,1,opt,name=exec_path,json=execPath,proto3" json:"exec_path,omitempty"`
 	NumNodes           *uint32 `protobuf:"varint,2,opt,name=num_nodes,json=numNodes,proto3,oneof" json:"num_nodes,omitempty"`
-	WhitelistedSubnets *string `protobuf:"bytes,3,opt,name=whitelisted_subnets,json=whitelistedSubnets,proto3,oneof" json:"whitelisted_subnets,omitempty"`
+	WhitelistedAllychains *string `protobuf:"bytes,3,opt,name=whitelisted_subnets,json=whitelistedAllychains,proto3,oneof" json:"whitelisted_subnets,omitempty"`
 	GlobalNodeConfig   *string `protobuf:"bytes,4,opt,name=global_node_config,json=globalNodeConfig,proto3,oneof" json:"global_node_config,omitempty"`
 	// Used for both database and log files.
 	RootDataDir *string `protobuf:"bytes,5,opt,name=root_data_dir,json=rootDataDir,proto3,oneof" json:"root_data_dir,omitempty"`
@@ -566,9 +566,9 @@ func (x *StartRequest) GetNumNodes() uint32 {
 	return 0
 }
 
-func (x *StartRequest) GetWhitelistedSubnets() string {
-	if x != nil && x.WhitelistedSubnets != nil {
-		return *x.WhitelistedSubnets
+func (x *StartRequest) GetWhitelistedAllychains() string {
+	if x != nil && x.WhitelistedAllychains != nil {
+		return *x.WhitelistedAllychains
 	}
 	return ""
 }
@@ -1013,7 +1013,7 @@ type RestartNodeRequest struct {
 	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
 	// Optional fields are set to the previous values if empty.
 	ExecPath           *string `protobuf:"bytes,2,opt,name=exec_path,json=execPath,proto3,oneof" json:"exec_path,omitempty"`
-	WhitelistedSubnets *string `protobuf:"bytes,3,opt,name=whitelisted_subnets,json=whitelistedSubnets,proto3,oneof" json:"whitelisted_subnets,omitempty"`
+	WhitelistedAllychains *string `protobuf:"bytes,3,opt,name=whitelisted_subnets,json=whitelistedAllychains,proto3,oneof" json:"whitelisted_subnets,omitempty"`
 	// Used for both database and log files.
 	RootDataDir *string `protobuf:"bytes,4,opt,name=root_data_dir,json=rootDataDir,proto3,oneof" json:"root_data_dir,omitempty"`
 }
@@ -1064,9 +1064,9 @@ func (x *RestartNodeRequest) GetExecPath() string {
 	return ""
 }
 
-func (x *RestartNodeRequest) GetWhitelistedSubnets() string {
-	if x != nil && x.WhitelistedSubnets != nil {
-		return *x.WhitelistedSubnets
+func (x *RestartNodeRequest) GetWhitelistedAllychains() string {
+	if x != nil && x.WhitelistedAllychains != nil {
+		return *x.WhitelistedAllychains
 	}
 	return ""
 }
