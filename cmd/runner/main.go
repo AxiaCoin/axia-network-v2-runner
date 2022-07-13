@@ -14,8 +14,8 @@ import (
 )
 
 var rootCmd = &cobra.Command{
-	Use:        "avalanche-network-runner",
-	Short:      "avalanche-network-runner commands",
+	Use:        "axia-network-runner",
+	Short:      "axia-network-runner commands",
 	SuggestFor: []string{"network-runner"},
 }
 
@@ -33,7 +33,7 @@ func init() {
 
 func main() {
 	if err := rootCmd.Execute(); err != nil {
-		fmt.Fprintf(os.Stderr, "avalanche-network-runner failed %v\n", err)
+		fmt.Fprintf(os.Stderr, "axia-network-runner failed %v\n", err)
 		os.Exit(1)
 	}
 	os.Exit(0)

@@ -1,4 +1,4 @@
-# Avalanche Network Runner
+# Axia Network Runner
 
 ## Note
 
@@ -8,7 +8,7 @@ Nonetheless, this README should provide valuable information about using this to
 
 ## Overview
 
-This is a tool to run and interact with an Avalanche network.
+This is a tool to run and interact with an Axia network.
 The nodes that compose the network can run either locally or in a Kubernetes cluster.
 This tool may be especially useful for development and testing.
 
@@ -55,7 +55,7 @@ whereas a node running locally has a config field that specifies the path of the
 
 ## Genesis Generation
 
-You can create a custom AvalancheGo genesis with function `network.NewAvalancheGoGenesis`:
+You can create a custom Axia genesis with function `network.NewAxiaGenesis`:
 
 ```go
 // Return a genesis JSON where:
@@ -64,7 +64,7 @@ You can create a custom AvalancheGo genesis with function `network.NewAvalancheG
 // [axChainBalances] and [swapChainBalances].
 // Note that many of the genesis fields (i.e. reward addresses)
 // are randomly generated or hard-coded.
-func NewAvalancheGoGenesis(
+func NewAxiaGenesis(
 	log logging.Logger,
 	networkID uint32,
 	swapChainBalances []AddrAndBalance,
@@ -136,10 +136,10 @@ The associated pre-defined configuration is also available to users by calling `
 
 ## Network Interaction
 
-The network runner allows users to interact with an AvalancheGo network using the `network.Network` interface:
+The network runner allows users to interact with an Axia network using the `network.Network` interface:
 
 ```go
-// Network is an abstraction of an Avalanche network
+// Network is an abstraction of an Axia network
 type Network interface {
 	// Returns a chan that is closed when
 	// all the nodes in the network are healthy.
@@ -173,12 +173,12 @@ type Network interface {
 and allows users to interact with a node using the `node.Node` interface:
 
 ```go
-// An AvalancheGo node
+// An Axia node
 type Node interface {
     // Return this node's name, which is unique
     // across all the nodes in its network.
     GetName() string
-    // Return this node's Avalanche node ID.
+    // Return this node's Axia node ID.
     GetNodeID() ids.ShortID
     // Return a client that can be used to make API calls.
     GetAPIClient() api.Client
@@ -205,7 +205,7 @@ go test ./...
 
 As an example of how to use the network runner, we've included a `main.go` that uses the local implementation of the network runner.
 When run, it:
-* Creates a local five node Avalanche network and waits for all nodes to become healthy.
+* Creates a local five node Axia network and waits for all nodes to become healthy.
 * Prints the names of the nodes
 * Prints the node ID of one node
 * Starts a new node
@@ -215,7 +215,7 @@ The network runs until the user provides a SIGINT or SIGTERM.
 
 It assumes:
 
-1. You have the latest AvalancheGo binaries at `$GOPATH/src/github.com/axiacoin/axia-network-v2/build`. For instructions on setting up AvalancheGo, see [here.](https://github.com/axiacoin/axia-network-v2)
+1. You have the latest Axia binaries at `$GOPATH/src/github.com/axiacoin/axia-network-v2/build`. For instructions on setting up Axia, see [here.](https://github.com/axiacoin/axia-network-v2)
 2. The network runner direcory is at `$GOPATH/src/github.com/axiacoin/axia-network-v2-runner`.
 
 To run the demo:
@@ -230,7 +230,7 @@ We've also included another example at `examples/local/fivenodenetwork/main.go`,
 
 **What does `network-runner` do?** The primary focus of [`network-runner`](https://github.com/axiacoin/axia-network-v2-runner) is to create a local network, as a test framework for local development.
 
-**Why `network-runner` as a binary?** Previously, each team was still required to write a substantial amount of Go code to integrate with `network-runner`. And the circular dependency on `avalanchego` made it unusable within `avalanchego` itself. Using `network-runner` as a binary (rather than Go package) eliminates the complexity of such dependency management.
+**Why `network-runner` as a binary?** Previously, each team was still required to write a substantial amount of Go code to integrate with `network-runner`. And the circular dependency on `axia` made it unusable within `axia` itself. Using `network-runner` as a binary (rather than Go package) eliminates the complexity of such dependency management.
 
 **Why `network-runner` needs RPC server?** `network-runner` needs to provide more complex workflow such as replace, restart, inject fail points, etc.. The RPC server will expose basic node operations to enable a separation of concerns such that one team develops test framework, and the other writes test cases and its controlling logic.
 
@@ -243,13 +243,13 @@ We've also included another example at `examples/local/fivenodenetwork/main.go`,
 ```bash
 # to install
 cd ${HOME}/go/src/github.com/axiacoin/axia-network-v2-runner
-go install -v ./cmd/avalanche-network-runner
+go install -v ./cmd/axia-network-runner
 ```
 
 To start the server:
 
 ```bash
-avalanche-network-runner server \
+axia-network-runner server \
 --log-level debug \
 --port=":8080" \
 --grpc-gateway-port=":8081"
@@ -261,7 +261,7 @@ To ping the server:
 curl -X POST -k http://localhost:8081/v1/ping -d ''
 
 # or
-avalanche-network-runner ping \
+axia-network-runner ping \
 --log-level debug \
 --endpoint="0.0.0.0:8080"
 ```
@@ -270,13 +270,13 @@ To start the server:
 
 ```bash
 # replace with your local path
-curl -X POST -k http://localhost:8081/v1/control/start -d '{"execPath":"/Users/gyuho.lee/go/src/github.com/axiacoin/axia-network-v2/build/avalanchego","whitelistedSubnets":"24tZhrm8j8GCJRE9PomW8FaeqbgGS4UAQjJnqqn8pq5NwYSYV1","logLevel":"INFO"}'
+curl -X POST -k http://localhost:8081/v1/control/start -d '{"execPath":"/Users/gyuho.lee/go/src/github.com/axiacoin/axia-network-v2/build/axia","whitelistedSubnets":"24tZhrm8j8GCJRE9PomW8FaeqbgGS4UAQjJnqqn8pq5NwYSYV1","logLevel":"INFO"}'
 
 # or
-avalanche-network-runner control start \
+axia-network-runner control start \
 --log-level debug \
 --endpoint="0.0.0.0:8080" \
---avalanchego-path ${HOME}/go/src/github.com/axiacoin/axia-network-v2/build/avalanchego \
+--axia-path ${HOME}/go/src/github.com/axiacoin/axia-network-v2/build/axia \
 --whitelisted-subnets="24tZhrm8j8GCJRE9PomW8FaeqbgGS4UAQjJnqqn8pq5NwYSYV1"
 ```
 
@@ -286,7 +286,7 @@ To wait for the cluster health:
 curl -X POST -k http://localhost:8081/v1/control/health -d ''
 
 # or
-avalanche-network-runner control health \
+axia-network-runner control health \
 --log-level debug \
 --endpoint="0.0.0.0:8080"
 ```
@@ -297,7 +297,7 @@ To get the cluster endpoints:
 curl -X POST -k http://localhost:8081/v1/control/uris -d ''
 
 # or
-avalanche-network-runner control uris \
+axia-network-runner control uris \
 --log-level debug \
 --endpoint="0.0.0.0:8080"
 ```
@@ -308,7 +308,7 @@ To query the cluster status from the server:
 curl -X POST -k http://localhost:8081/v1/control/status -d ''
 
 # or
-avalanche-network-runner control status \
+axia-network-runner control status \
 --log-level debug \
 --endpoint="0.0.0.0:8080"
 ```
@@ -316,7 +316,7 @@ avalanche-network-runner control status \
 To stream cluster status:
 
 ```bash
-avalanche-network-runner control \
+axia-network-runner control \
 --request-timeout=3m \
 stream-status \
 --push-interval=5s \
@@ -330,7 +330,7 @@ To remove (stop) a node:
 curl -X POST -k http://localhost:8081/v1/control/removenode -d '{"name":"node5"}'
 
 # or
-avalanche-network-runner control remove-node \
+axia-network-runner control remove-node \
 --request-timeout=3m \
 --log-level debug \
 --endpoint="0.0.0.0:8080" \
@@ -345,41 +345,41 @@ To restart a node, download the test binary:
 VERSION=1.7.3
 GOARCH=$(go env GOARCH)
 GOOS=$(go env GOOS)
-DOWNLOAD_URL=https://github.com/axiacoin/axia-network-v2/releases/download/v${VERSION}/avalanchego-linux-${GOARCH}-v${VERSION}.tar.gz
-DOWNLOAD_PATH=/tmp/avalanchego.tar.gz
+DOWNLOAD_URL=https://github.com/axiacoin/axia-network-v2/releases/download/v${VERSION}/axia-linux-${GOARCH}-v${VERSION}.tar.gz
+DOWNLOAD_PATH=/tmp/axia.tar.gz
 if [[ ${GOOS} == "darwin" ]]; then
-  DOWNLOAD_URL=https://github.com/axiacoin/axia-network-v2/releases/download/v${VERSION}/avalanchego-macos-v${VERSION}.zip
-  DOWNLOAD_PATH=/tmp/avalanchego.zip
+  DOWNLOAD_URL=https://github.com/axiacoin/axia-network-v2/releases/download/v${VERSION}/axia-macos-v${VERSION}.zip
+  DOWNLOAD_PATH=/tmp/axia.zip
 fi
 
-rm -rf /tmp/avalanchego-v${VERSION}
-rm -rf /tmp/avalanchego-build
+rm -rf /tmp/axia-v${VERSION}
+rm -rf /tmp/axia-build
 rm -f ${DOWNLOAD_PATH}
-echo "downloading avalanchego ${VERSION} at ${DOWNLOAD_URL}"
+echo "downloading axia ${VERSION} at ${DOWNLOAD_URL}"
 curl -L ${DOWNLOAD_URL} -o ${DOWNLOAD_PATH}
 
-echo "extracting downloaded avalanchego"
+echo "extracting downloaded axia"
 if [[ ${GOOS} == "linux" ]]; then
   tar xzvf ${DOWNLOAD_PATH} -C /tmp
 elif [[ ${GOOS} == "darwin" ]]; then
-  unzip ${DOWNLOAD_PATH} -d /tmp/avalanchego-build
-  mv /tmp/avalanchego-build/build /tmp/avalanchego-v${VERSION}
+  unzip ${DOWNLOAD_PATH} -d /tmp/axia-build
+  mv /tmp/axia-build/build /tmp/axia-v${VERSION}
 fi
-find /tmp/avalanchego-v${VERSION}
+find /tmp/axia-v${VERSION}
 ```
 
 To restart a node:
 
 ```bash
-curl -X POST -k http://localhost:8081/v1/control/restartnode -d '{"name":"node1","startRequest":{"execPath":"/tmp/avalanchego-v1.7.3/build/avalanchego",whitelistedSubnets:"",,"logLevel":"INFO"}}'
+curl -X POST -k http://localhost:8081/v1/control/restartnode -d '{"name":"node1","startRequest":{"execPath":"/tmp/axia-v1.7.3/build/axia",whitelistedSubnets:"",,"logLevel":"INFO"}}'
 
 # or
-avalanche-network-runner control restart-node \
+axia-network-runner control restart-node \
 --request-timeout=3m \
 --log-level debug \
 --endpoint="0.0.0.0:8080" \
 --node-name node1 \
---avalanchego-path /tmp/avalanchego-v1.7.3/build/avalanchego \
+--axia-path /tmp/axia-v1.7.3/build/axia \
 --whitelisted-subnets=""
 ```
 
@@ -389,7 +389,7 @@ To terminate the cluster:
 curl -X POST -k http://localhost:8081/v1/control/stop -d ''
 
 # or
-avalanche-network-runner control stop \
+axia-network-runner control stop \
 --log-level debug \
 --endpoint="0.0.0.0:8080"
 ```

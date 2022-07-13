@@ -10,12 +10,12 @@ import (
 	"github.com/axiacoin/axia-network-v2/ids"
 )
 
-// Node represents an AvalancheGo node
+// Node represents an Axia node
 type Node interface {
 	// Return this node's name, which is unique
 	// across all the nodes in its network.
 	GetName() string
-	// Return this node's Avalanche node ID.
+	// Return this node's Axia node ID.
 	GetNodeID() ids.ShortID
 	// Return a client that can be used to make API calls.
 	GetAPIClient() api.Client
@@ -29,7 +29,7 @@ type Node interface {
 	GetAPIPort() uint16
 }
 
-// Config encapsulates an avalanchego configuration
+// Config encapsulates an axia configuration
 type Config struct {
 	// Configuration specific to a particular implementation of a node.
 	ImplSpecificConfig json.RawMessage `json:"implSpecificConfig"`

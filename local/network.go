@@ -160,7 +160,7 @@ func (npc *nodeProcessCreator) NewNodeProcess(config node.Config, args ...string
 	if err := json.Unmarshal(config.ImplSpecificConfig, &localNodeConfig); err != nil {
 		return nil, fmt.Errorf("couldn't unmarshal local.NodeConfig: %w", err)
 	}
-	// Start the AvalancheGo node and pass it the flags defined above
+	// Start the Axia node and pass it the flags defined above
 	cmd := exec.Command(localNodeConfig.BinaryPath, args...)
 	// assign a new color to this process (might not be used if the localNodeConfig isn't set for it)
 	color := npc.colorPicker.NextColor()
@@ -208,7 +208,7 @@ func NewNetwork(
 
 // See NewNetwork.
 // [newAPIClientF] is used to create new API clients.
-// [nodeProcessCreator] is used to launch new avalanchego processes.
+// [nodeProcessCreator] is used to launch new axia processes.
 func newNetwork(
 	log logging.Logger,
 	networkConfig network.Config,
@@ -253,7 +253,7 @@ func newNetwork(
 	}
 
 	if dir == "" {
-		net.rootDir, err = os.MkdirTemp("", "avalanche-network-runner-*")
+		net.rootDir, err = os.MkdirTemp("", "axia-network-runner-*")
 		if err != nil {
 			return nil, err
 		}
@@ -376,7 +376,7 @@ func (ln *localNetwork) addNode(nodeConfig node.Config) (node.Node, error) {
 		return nil, fmt.Errorf("Unmarshalling an expected local.NodeConfig object failed: %w", err)
 	}
 
-	// Start the AvalancheGo node and pass it the flags defined above
+	// Start the Axia node and pass it the flags defined above
 	nodeProcess, err := ln.nodeProcessCreator.NewNodeProcess(nodeConfig, flags...)
 	if err != nil {
 		return nil, fmt.Errorf("couldn't create new node process: %s", err)
@@ -739,7 +739,7 @@ func (ln *localNetwork) buildFlags(
 		return nil, 0, 0, err
 	}
 
-	// Flags for AvalancheGo
+	// Flags for Axia
 	flags := []string{
 		fmt.Sprintf("--%s=%d", config.NetworkNameKey, ln.networkID),
 		fmt.Sprintf("--%s=%s", config.DBPathKey, dbPath),

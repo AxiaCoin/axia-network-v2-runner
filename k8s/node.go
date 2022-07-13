@@ -1,7 +1,7 @@
 package k8s
 
 import (
-	k8sapi "github.com/ava-labs/avalanchego-operator/api/v1alpha1"
+	k8sapi "github.com/ava-labs/axia-operator/api/v1alpha1"
 	"github.com/axiacoin/axia-network-v2-runner/api"
 	"github.com/axiacoin/axia-network-v2-runner/network/node"
 	"github.com/axiacoin/axia-network-v2/ids"
@@ -20,9 +20,9 @@ type ObjectSpec struct {
 	Tag        string `json:"tag"`        // The docker tag to use
 }
 
-// Node is a Avalanchego representation on k8s
+// Node is a Axia representation on k8s
 type Node struct {
-	// This node's AvalancheGo node ID
+	// This node's Axia node ID
 	nodeID ids.ShortID
 	// Unique name of this node
 	name string
@@ -31,7 +31,7 @@ type Node struct {
 	// Use to send API calls to this node
 	apiClient api.Client
 	// K8s description of this node
-	k8sObjSpec *k8sapi.Avalanchego
+	k8sObjSpec *k8sapi.Axia
 }
 
 // See node.Node
@@ -67,6 +67,6 @@ func (n *Node) GetAPIPort() uint16 {
 
 // GetK8sObjSpec returns the kubernetes object spec
 // representation of this node
-func (n *Node) GetK8sObjSpec() *k8sapi.Avalanchego {
+func (n *Node) GetK8sObjSpec() *k8sapi.Axia {
 	return n.k8sObjSpec
 }

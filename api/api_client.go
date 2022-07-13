@@ -20,7 +20,7 @@ var (
 	_ NewAPIClientF = NewAPIClient
 )
 
-// APIClient gives access to most avalanchego apis (or suitable wrappers)
+// APIClient gives access to most axia apis (or suitable wrappers)
 type APIClient struct {
 	platform     platformvm.Client
 	swapChain       avm.Client
@@ -39,7 +39,7 @@ type APIClient struct {
 // Returns a new API client for a node at [ipAddr]:[port].
 type NewAPIClientF func(ipAddr string, port uint16) Client
 
-// NewAPIClient initialize most of avalanchego apis
+// NewAPIClient initialize most of axia apis
 func NewAPIClient(ipAddr string, port uint16) Client {
 	uri := fmt.Sprintf("http://%s:%d", ipAddr, port)
 	return &APIClient{

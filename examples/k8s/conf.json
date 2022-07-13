@@ -5,43 +5,43 @@
   },
   "k8sConfig": [
     {
-      "namespace": "ci-avalanchego",
-      "identifier": "avalanchego-test-validator-0",
-      "kind": "Avalanchego",
+      "namespace": "ci-axia",
+      "identifier": "axia-test-validator-0",
+      "kind": "Axia",
       "apiVersion": "chain.avax.network/v1alpha1",
-      "image": "avaplatform/avalanchego",
+      "image": "avaplatform/axia",
       "tag": "v1.6.4"
     },
     {
-      "namespace": "ci-avalanchego",
-      "identifier": "avalanchego-test-validator-1",
-      "kind": "Avalanchego",
+      "namespace": "ci-axia",
+      "identifier": "axia-test-validator-1",
+      "kind": "Axia",
       "apiVersion": "chain.avax.network/v1alpha1",
-      "image": "avaplatform/avalanchego",
+      "image": "avaplatform/axia",
       "tag": "v1.6.4"
     },
     {
-      "namespace": "ci-avalanchego",
-      "identifier": "avalanchego-test-validator-2",
-      "kind": "Avalanchego",
+      "namespace": "ci-axia",
+      "identifier": "axia-test-validator-2",
+      "kind": "Axia",
       "apiVersion": "chain.avax.network/v1alpha1",
-      "image": "avaplatform/avalanchego",
+      "image": "avaplatform/axia",
       "tag": "v1.6.4"
     },
     {
-      "namespace": "ci-avalanchego",
-      "identifier": "avalanchego-test-validator-3",
-      "kind": "Avalanchego",
+      "namespace": "ci-axia",
+      "identifier": "axia-test-validator-3",
+      "kind": "Axia",
       "apiVersion": "chain.avax.network/v1alpha1",
-      "image": "avaplatform/avalanchego",
+      "image": "avaplatform/axia",
       "tag": "v1.6.4"
     },
     {
-      "namespace": "ci-avalanchego",
-      "identifier": "avalanchego-test-validator-4",
-      "kind": "Avalanchego",
+      "namespace": "ci-axia",
+      "identifier": "axia-test-validator-4",
+      "kind": "Axia",
       "apiVersion": "chain.avax.network/v1alpha1",
-      "image": "avaplatform/avalanchego",
+      "image": "avaplatform/axia",
       "tag": "v1.6.4"
     }
   ]

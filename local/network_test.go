@@ -498,7 +498,7 @@ func TestGeneratedNodesNames(t *testing.T) {
 }
 
 // TestGenerateDefaultNetwork create a default network with GenerateDefaultNetwork and
-// check expected number of nodes, node names, and avalanchego node ids
+// check expected number of nodes, node names, and axia node ids
 func TestGenerateDefaultNetwork(t *testing.T) {
 	assert := assert.New(t)
 	binaryPath := "pepito"
@@ -867,7 +867,7 @@ func checkNetwork(t *testing.T, net network.Network, runningNodes map[string]str
 func emptyNetworkConfig() (network.Config, error) {
 	networkID := uint32(1337)
 	// Use a dummy genesis
-	genesis, err := network.NewAvalancheGoGenesis(
+	genesis, err := network.NewAxiaGenesis(
 		logging.NoLog{},
 		networkID,
 		[]network.AddrAndBalance{
@@ -1089,7 +1089,7 @@ func TestWriteFiles(t *testing.T) {
 	genesis := []byte("genesis")
 	configFile := "config file"
 	axChainConfigFile := "ax-chain config file"
-	tmpDir, err := os.MkdirTemp("", "avalanche-network-runner-tests-*")
+	tmpDir, err := os.MkdirTemp("", "axia-network-runner-tests-*")
 	if err != nil {
 		t.Fatal(err)
 	}

@@ -12,7 +12,7 @@ import (
 	"github.com/axiacoin/axia-network-v2/utils/constants"
 )
 
-// TODO: remove this in favor of an exported utility from avalanchego
+// TODO: remove this in favor of an exported utility from axia
 
 var (
 	_ Set = &set{}

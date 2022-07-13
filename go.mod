@@ -3,7 +3,7 @@ module github.com/axiacoin/axia-network-v2-runner
 go 1.17
 
 require (
-	github.com/ava-labs/avalanchego-operator v0.0.0-20211115144351-99f07d2570bf
+	github.com/ava-labs/axia-operator v0.0.0-20211115144351-99f07d2570bf
 	github.com/ethereum/go-ethereum v1.10.16
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.7.2
 	github.com/onsi/ginkgo/v2 v2.1.0

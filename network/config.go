@@ -135,7 +135,7 @@ func (c *Config) Validate() error {
 // [axChainBalances] and [swapChainBalances].
 // Note that many of the genesis fields (i.e. reward addresses)
 // are randomly generated or hard-coded.
-func NewAvalancheGoGenesis(
+func NewAxiaGenesis(
 	log logging.Logger,
 	networkID uint32,
 	swapChainBalances []AddrAndBalance,
@@ -221,6 +221,6 @@ func NewAvalancheGoGenesis(
 		)
 	}
 
-	// TODO add validation (from AvalancheGo's function validateConfig?)
+	// TODO add validation (from Axia's function validateConfig?)
 	return json.Marshal(config)
 }

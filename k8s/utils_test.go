@@ -13,7 +13,7 @@ import (
 	v1 "k8s.io/api/core/v1"
 )
 
-// TestBuildNodeEnv tests the internal buildNodeEnv method which creates the env vars for the avalanche nodes
+// TestBuildNodeEnv tests the internal buildNodeEnv method which creates the env vars for the axia nodes
 func TestBuildNodeEnv(t *testing.T) {
 	genesis := defaultTestGenesis
 	testConfig := `
@@ -51,7 +51,7 @@ func TestBuildNodeEnv(t *testing.T) {
 }
 
 // TestConvertKey tests the internal convertKey method which is used
-// to convert from the avalanchego config file format to env vars
+// to convert from the axia config file format to env vars
 func TestConvertKey(t *testing.T) {
 	testKey := "network-peer-list-gossip-frequency"
 	controlKey := "AVAGO_NETWORK_PEER_LIST_GOSSIP_FREQUENCY"
@@ -75,7 +75,7 @@ func TestCreateDeploymentConfig(t *testing.T) {
 				"v1",
 				"test11",
 				"img1",
-				"Avalanchego",
+				"Axia",
 				"test01",
 				"t1",
 			),
@@ -90,7 +90,7 @@ func TestCreateDeploymentConfig(t *testing.T) {
 				"v2",
 				"test22",
 				"img2",
-				"Avalanchego",
+				"Axia",
 				"test02",
 				"t2",
 			),
@@ -113,8 +113,8 @@ func TestCreateDeploymentConfig(t *testing.T) {
 
 	assert.Equal(b.Name, "test11")
 	assert.Equal(n.Name, "test22")
-	assert.Equal(b.Kind, "Avalanchego")
-	assert.Equal(n.Kind, "Avalanchego")
+	assert.Equal(b.Kind, "Axia")
+	assert.Equal(n.Kind, "Axia")
 	assert.Equal(b.APIVersion, "v1")
 	assert.Equal(n.APIVersion, "v2")
 	assert.Equal(b.Namespace, "test01")

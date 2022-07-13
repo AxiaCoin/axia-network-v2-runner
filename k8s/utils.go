@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"strings"
 
-	k8sapi "github.com/ava-labs/avalanchego-operator/api/v1alpha1"
+	k8sapi "github.com/ava-labs/axia-operator/api/v1alpha1"
 	"github.com/axiacoin/axia-network-v2-runner/network/node"
 	"github.com/axiacoin/axia-network-v2-runner/utils"
 	"github.com/axiacoin/axia-network-v2/config"
@@ -17,7 +17,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// Convert a config flag to the format AvalancheGo expects
+// Convert a config flag to the format Axia expects
 // environment variable config flags in.
 // e.g. bootstrap-ips --> AVAGO_BOOTSTRAP_IPS
 // e.g. log-level --> AVAGO_LOG_LEVEL
@@ -65,7 +65,7 @@ func buildNodeEnv(log logging.Logger, genesis []byte, c node.Config) ([]corev1.E
 		}
 	}
 
-	// AvalancheGo expects environment variable config keys in.
+	// Axia expects environment variable config keys in.
 	// e.g. bootstrap-ips --> AVAGO_BOOTSTRAP_IPS
 	// e.g. log-level --> AVAGO_LOG_LEVEL
 	env := []corev1.EnvVar{
@@ -86,7 +86,7 @@ func buildNodeEnv(log logging.Logger, genesis []byte, c node.Config) ([]corev1.E
 }
 
 // Takes a node's config and genesis and returns the node as a k8s object spec
-func buildK8sObjSpec(log logging.Logger, genesis []byte, c node.Config) (*k8sapi.Avalanchego, error) {
+func buildK8sObjSpec(log logging.Logger, genesis []byte, c node.Config) (*k8sapi.Axia, error) {
 	env, err := buildNodeEnv(log, genesis, c)
 	if err != nil {
 		return nil, err
@@ -106,7 +106,7 @@ func buildK8sObjSpec(log logging.Logger, genesis []byte, c node.Config) (*k8sapi
 		return nil, err
 	}
 
-	return &k8sapi.Avalanchego{
+	return &k8sapi.Axia{
 		TypeMeta: metav1.TypeMeta{
 			Kind:       k8sConf.Kind,
 			APIVersion: k8sConf.APIVersion,
@@ -115,7 +115,7 @@ func buildK8sObjSpec(log logging.Logger, genesis []byte, c node.Config) (*k8sapi
 			Name:      k8sConf.Identifier,
 			Namespace: k8sConf.Namespace,
 		},
-		Spec: k8sapi.AvalanchegoSpec{
+		Spec: k8sapi.AxiaSpec{
 			BootstrapperURL: "",
 			DeploymentName:  k8sConf.Identifier,
 			Image:           k8sConf.Image,
@@ -146,9 +146,9 @@ func validateObjectSpec(k8sobj ObjectSpec) error {
 		return errors.New("name should not be empty")
 	case k8sobj.APIVersion == "":
 		return errors.New("APIVersion should not be empty")
-	case k8sobj.Kind != "Avalanchego":
-		// only "AvalancheGo" currently supported -- mandated by avalanchego-operator
-		return fmt.Errorf("expected \"Avalanchego\" but got %q", k8sobj.Kind)
+	case k8sobj.Kind != "Axia":
+		// only "Axia" currently supported -- mandated by axia-operator
+		return fmt.Errorf("expected \"Axia\" but got %q", k8sobj.Kind)
 	case k8sobj.Namespace == "":
 		return errors.New("namespace should be defined to avoid unintended consequences")
 	case k8sobj.Image == "" || strings.Index(k8sobj.Image, "/") == 1:
@@ -161,9 +161,9 @@ func validateObjectSpec(k8sobj ObjectSpec) error {
 // Takes the genesis of a network and node configs and returns:
 // 1) The beacon nodes
 // 2) The non-beacon nodes
-// as avalanchego-operator compatible descriptions.
+// as axia-operator compatible descriptions.
 // May return nil slices.
-func createDeploymentFromConfig(params networkParams) ([]*k8sapi.Avalanchego, []*k8sapi.Avalanchego, error) {
+func createDeploymentFromConfig(params networkParams) ([]*k8sapi.Axia, []*k8sapi.Axia, error) {
 	// Give each flag in the network config to each node's config.
 	// If a flag is defined in both the network config and the node config,
 	// the value given in the node config takes precedence.
@@ -185,7 +185,7 @@ func createDeploymentFromConfig(params networkParams) ([]*k8sapi.Avalanchego, []
 		}
 	}
 
-	var beacons, nonBeacons []*k8sapi.Avalanchego
+	var beacons, nonBeacons []*k8sapi.Axia
 	names := make(map[string]struct{})
 	for _, nodeConfig := range params.conf.NodeConfigs {
 		spec, err := buildK8sObjSpec(params.log, []byte(params.conf.Genesis), nodeConfig)

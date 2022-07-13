@@ -27,61 +27,61 @@ echo VERSION_1: ${VERSION_1}
 echo VERSION_2: ${VERSION_2}
 
 ############################
-# download avalanchego
+# download axia
 # https://github.com/axiacoin/axia-network-v2/releases
 GOARCH=$(go env GOARCH)
 GOOS=$(go env GOOS)
-DOWNLOAD_URL=https://github.com/axiacoin/axia-network-v2/releases/download/v${VERSION_1}/avalanchego-linux-${GOARCH}-v${VERSION_1}.tar.gz
-DOWNLOAD_PATH=/tmp/avalanchego.tar.gz
+DOWNLOAD_URL=https://github.com/axiacoin/axia-network-v2/releases/download/v${VERSION_1}/axia-linux-${GOARCH}-v${VERSION_1}.tar.gz
+DOWNLOAD_PATH=/tmp/axia.tar.gz
 if [[ ${GOOS} == "darwin" ]]; then
-  DOWNLOAD_URL=https://github.com/axiacoin/axia-network-v2/releases/download/v${VERSION_1}/avalanchego-macos-v${VERSION_1}.zip
-  DOWNLOAD_PATH=/tmp/avalanchego.zip
+  DOWNLOAD_URL=https://github.com/axiacoin/axia-network-v2/releases/download/v${VERSION_1}/axia-macos-v${VERSION_1}.zip
+  DOWNLOAD_PATH=/tmp/axia.zip
 fi
 
-rm -rf /tmp/avalanchego-v${VERSION_1}
-rm -rf /tmp/avalanchego-build
+rm -rf /tmp/axia-v${VERSION_1}
+rm -rf /tmp/axia-build
 rm -f ${DOWNLOAD_PATH}
 
-echo "downloading avalanchego ${VERSION_1} at ${DOWNLOAD_URL}"
+echo "downloading axia ${VERSION_1} at ${DOWNLOAD_URL}"
 curl -L ${DOWNLOAD_URL} -o ${DOWNLOAD_PATH}
 
-echo "extracting downloaded avalanchego"
+echo "extracting downloaded axia"
 if [[ ${GOOS} == "linux" ]]; then
   tar xzvf ${DOWNLOAD_PATH} -C /tmp
 elif [[ ${GOOS} == "darwin" ]]; then
-  unzip ${DOWNLOAD_PATH} -d /tmp/avalanchego-build
-  mv /tmp/avalanchego-build/build /tmp/avalanchego-v${VERSION_1}
+  unzip ${DOWNLOAD_PATH} -d /tmp/axia-build
+  mv /tmp/axia-build/build /tmp/axia-v${VERSION_1}
 fi
-find /tmp/avalanchego-v${VERSION_1}
+find /tmp/axia-v${VERSION_1}
 
 ############################
-# download avalanchego
+# download axia
 # https://github.com/axiacoin/axia-network-v2/releases
-DOWNLOAD_URL=https://github.com/axiacoin/axia-network-v2/releases/download/v${VERSION_2}/avalanchego-linux-${GOARCH}-v${VERSION_2}.tar.gz
+DOWNLOAD_URL=https://github.com/axiacoin/axia-network-v2/releases/download/v${VERSION_2}/axia-linux-${GOARCH}-v${VERSION_2}.tar.gz
 if [[ ${GOOS} == "darwin" ]]; then
-  DOWNLOAD_URL=https://github.com/axiacoin/axia-network-v2/releases/download/v${VERSION_2}/avalanchego-macos-v${VERSION_2}.zip
-  DOWNLOAD_PATH=/tmp/avalanchego.zip
+  DOWNLOAD_URL=https://github.com/axiacoin/axia-network-v2/releases/download/v${VERSION_2}/axia-macos-v${VERSION_2}.zip
+  DOWNLOAD_PATH=/tmp/axia.zip
 fi
 
-rm -rf /tmp/avalanchego-v${VERSION_2}
-rm -rf /tmp/avalanchego-build
+rm -rf /tmp/axia-v${VERSION_2}
+rm -rf /tmp/axia-build
 rm -f ${DOWNLOAD_PATH}
 
-echo "downloading avalanchego ${VERSION_2} at ${DOWNLOAD_URL}"
+echo "downloading axia ${VERSION_2} at ${DOWNLOAD_URL}"
 curl -L ${DOWNLOAD_URL} -o ${DOWNLOAD_PATH}
 
-echo "extracting downloaded avalanchego"
+echo "extracting downloaded axia"
 if [[ ${GOOS} == "linux" ]]; then
   tar xzvf ${DOWNLOAD_PATH} -C /tmp
 elif [[ ${GOOS} == "darwin" ]]; then
-  unzip ${DOWNLOAD_PATH} -d /tmp/avalanchego-build
-  mv /tmp/avalanchego-build/build /tmp/avalanchego-v${VERSION_2}
+  unzip ${DOWNLOAD_PATH} -d /tmp/axia-build
+  mv /tmp/axia-build/build /tmp/axia-v${VERSION_2}
 fi
-find /tmp/avalanchego-v${VERSION_2}
+find /tmp/axia-v${VERSION_2}
 
 ############################
 echo "building runner"
-go build -v -o /tmp/network.runner ./cmd/avalanche-network-runner
+go build -v -o /tmp/network.runner ./cmd/axia-network-runner
 
 echo "building e2e.test"
 # to install the ginkgo binary (required for test build and run)
@@ -103,8 +103,8 @@ echo "running e2e tests"
 --log-level debug \
 --grpc-endpoint="0.0.0.0:8080" \
 --grpc-gateway-endpoint="0.0.0.0:8081" \
---avalanchego-path-1=/tmp/avalanchego-v${VERSION_1}/avalanchego \
---avalanchego-path-2=/tmp/avalanchego-v${VERSION_2}/avalanchego
+--axia-path-1=/tmp/axia-v${VERSION_1}/axia \
+--axia-path-2=/tmp/axia-v${VERSION_2}/axia
 
 kill -9 ${PID}
 echo "ALL SUCCESS!"

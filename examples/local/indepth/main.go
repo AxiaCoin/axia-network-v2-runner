@@ -43,8 +43,8 @@ func shutdownOnSignal(
 	close(closedOnShutdownChan)
 }
 
-// Shows example usage of the Avalanche Network Runner.
-// Creates a local five node Avalanche network
+// Shows example usage of the Axia Network Runner.
+// Creates a local five node Axia network
 // and waits for all nodes to become healthy.
 // Then, we:
 // * print the names of the nodes
@@ -65,7 +65,7 @@ func main() {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-	binaryPath := fmt.Sprintf("%s%s", goPath, "/src/github.com/axiacoin/axia-network-v2/build/avalanchego")
+	binaryPath := fmt.Sprintf("%s%s", goPath, "/src/github.com/axiacoin/axia-network-v2/build/axia")
 	if err := run(log, binaryPath); err != nil {
 		log.Fatal("%s", err)
 		os.Exit(1)

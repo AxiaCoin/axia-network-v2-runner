@@ -27,7 +27,7 @@ type NodeConfig struct {
 }
 
 // NodeProcess as an interface so we can mock running
-// AvalancheGo binaries in tests
+// Axia binaries in tests
 type NodeProcess interface {
 	// Start this process
 	Start() error
@@ -53,7 +53,7 @@ func (p *nodeProcessImpl) Stop() error {
 	return p.cmd.Process.Signal(syscall.SIGTERM)
 }
 
-// Gives access to basic nodes info, and to most avalanchego apis
+// Gives access to basic nodes info, and to most axia apis
 type localNode struct {
 	// Must be unique across all nodes in this network.
 	name string

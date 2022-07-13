@@ -51,15 +51,15 @@ func init() {
 	)
 	flag.StringVar(
 		&execPath1,
-		"avalanchego-path-1",
+		"axia-path-1",
 		"",
-		"avalanchego executable path (to upgrade from)",
+		"axia executable path (to upgrade from)",
 	)
 	flag.StringVar(
 		&execPath2,
-		"avalanchego-path-2",
+		"axia-path-2",
 		"",
-		"avalanchego executable path (to upgrade to)",
+		"axia executable path (to upgrade to)",
 	)
 }
 

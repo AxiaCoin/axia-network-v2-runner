@@ -16,7 +16,7 @@ import (
 	"github.com/axiacoin/axia-network-v2/utils/logging"
 	"golang.org/x/sync/errgroup"
 
-	k8sapi "github.com/ava-labs/avalanchego-operator/api/v1alpha1"
+	k8sapi "github.com/ava-labs/axia-operator/api/v1alpha1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -28,7 +28,7 @@ const (
 	nodeReachableTimeout = 2 * time.Minute
 	// Time between checks to see if a node is reachable
 	nodeReachableRetryFreq = 3 * time.Second
-	// Prefix the avalanchego-operator uses to pass params to avalanchego nodes
+	// Prefix the axia-operator uses to pass params to axia nodes
 	envVarPrefix = "AVAGO_"
 )
 
@@ -264,7 +264,7 @@ func (a *networkImpl) AddNode(cfg node.Config) (node.Node, error) {
 	}
 
 	a.log.Debug("Launching new node %s to network...", cfg.Name)
-	if err := a.launchNodes([]*k8sapi.Avalanchego{nodeSpec}); err != nil {
+	if err := a.launchNodes([]*k8sapi.Axia{nodeSpec}); err != nil {
 		return nil, err
 	}
 
@@ -338,7 +338,7 @@ func (net *networkImpl) isStopped() bool {
 
 // Creates the given nodes and blocks until they're all reachable.
 // Assumes [a.nodesLock] isn't held.
-func (a *networkImpl) launchNodes(nodeSpecs []*k8sapi.Avalanchego) error {
+func (a *networkImpl) launchNodes(nodeSpecs []*k8sapi.Axia) error {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
@@ -357,7 +357,7 @@ func (a *networkImpl) launchNodes(nodeSpecs []*k8sapi.Avalanchego) error {
 
 // Create the given node in k8s and block until it's reachable.
 // Assumes [a.nodesLock] isn't held.
-func (a *networkImpl) launchNode(ctx context.Context, nodeSpec *k8sapi.Avalanchego) error {
+func (a *networkImpl) launchNode(ctx context.Context, nodeSpec *k8sapi.Axia) error {
 	ctx, cancel := context.WithTimeout(ctx, nodeReachableTimeout)
 	defer cancel()
 
