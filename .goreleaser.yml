@@ -1,8 +1,8 @@
 # ref. https://goreleaser.com/customization/build/
 builds:
-  - id: axia-network-runner
-    main: ./cmd/axia-network-runner
-    binary: axia-network-runner
+  - id: avalanche-network-runner
+    main: ./cmd/avalanche-network-runner
+    binary: avalanche-network-runner
     flags:
       - -v
     ignore:
@@ -19,5 +19,5 @@ release:
   # Repo in which the release will be created.
   # Default is extracted from the origin remote URL or empty if its private hosted.
   github:
-    owner: axiacoin
-    name: axia-network-runner
+    owner: ava-labs
+    name: avalanche-network-runner

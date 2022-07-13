@@ -8,9 +8,10 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/axiacoin/axia-network-runner/local"
-	"github.com/axiacoin/axia-network-runner/network"
-	"github.com/axiacoin/axia-network-runner/network/node"
+	"github.com/axiacoin/axia-network-v2-runner/local"
+	"github.com/axiacoin/axia-network-v2-runner/network"
+	"github.com/axiacoin/axia-network-v2-runner/network/node"
+	"github.com/axiacoin/axia-network-v2-runner/utils"
 	"github.com/axiacoin/axia-network-v2/config"
 	"github.com/axiacoin/axia-network-v2/staking"
 	"github.com/axiacoin/axia-network-v2/utils/logging"
@@ -42,8 +43,8 @@ func shutdownOnSignal(
 	close(closedOnShutdownChan)
 }
 
-// Shows example usage of the Axia Network Runner.
-// Creates a local five node Axia network
+// Shows example usage of the Avalanche Network Runner.
+// Creates a local five node Avalanche network
 // and waits for all nodes to become healthy.
 // Then, we:
 // * print the names of the nodes
@@ -53,16 +54,18 @@ func shutdownOnSignal(
 // The network runs until the user provides a SIGINT or SIGTERM.
 func main() {
 	// Create the logger
-	logFactory := logging.NewFactory(logging.Config{
-		DisplayLevel: logging.Info,
-		LogLevel:     logging.Debug,
-	})
+	loggingConfig, err := logging.DefaultConfig()
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	logFactory := logging.NewFactory(loggingConfig)
 	log, err := logFactory.Make("main")
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-	binaryPath := fmt.Sprintf("%s%s", goPath, "/src/github.com/axiacoin/axia-network-v2/build/axia")
+	binaryPath := fmt.Sprintf("%s%s", goPath, "/src/github.com/axiacoin/axia-network-v2/build/avalanchego")
 	if err := run(log, binaryPath); err != nil {
 		log.Fatal("%s", err)
 		os.Exit(1)
@@ -93,10 +96,10 @@ func run(log logging.Logger, binaryPath string) error {
 	// Wait until the nodes in the network are ready
 	ctx, cancel := context.WithTimeout(context.Background(), healthyTimeout)
 	defer cancel()
+	healthyChan := nw.Healthy(ctx)
 	log.Info("waiting for all nodes to report healthy...")
-	if err := nw.Healthy(ctx); err != nil {
+	if err := <-healthyChan; err != nil {
 		return err
-
 	}
 
 	// Print the node names
@@ -107,17 +110,17 @@ func run(log logging.Logger, binaryPath string) error {
 	log.Info("current network's nodes: %s", nodeNames)
 
 	// Get one node
-	node1, err := nw.GetNode(nodeNames[0])
+	node0, err := nw.GetNode(nodeNames[0])
 	if err != nil {
 		return err
 	}
 
 	// Get its node ID through its API and print it
-	node1ID, err := node1.GetAPIClient().InfoAPI().GetNodeID(context.Background())
+	node0ID, err := node0.GetAPIClient().InfoAPI().GetNodeID(context.Background())
 	if err != nil {
 		return err
 	}
-	log.Info("one node's ID is: %s", node1ID)
+	log.Info("one node's ID is: %s", node0ID)
 
 	// Add a new node with generated cert/key/nodeid
 	stakingCert, stakingKey, err := staking.NewCertAndKeyBytes()
@@ -125,10 +128,10 @@ func run(log logging.Logger, binaryPath string) error {
 		return err
 	}
 	nodeConfig := node.Config{
-		Name:        "New Node",
-		BinaryPath:  binaryPath,
-		StakingKey:  string(stakingKey),
-		StakingCert: string(stakingCert),
+		Name:               "New Node",
+		ImplSpecificConfig: utils.NewLocalNodeConfigJsonRaw(binaryPath),
+		StakingKey:         string(stakingKey),
+		StakingCert:        string(stakingCert),
 		// The flags below would override the config in this node's config file,
 		// if it had one.
 		Flags: map[string]interface{}{
@@ -150,8 +153,9 @@ func run(log logging.Logger, binaryPath string) error {
 	// Wait until the nodes in the updated network are ready
 	ctx, cancel = context.WithTimeout(context.Background(), healthyTimeout)
 	defer cancel()
+	healthyChan = nw.Healthy(ctx)
 	log.Info("waiting for updated network to report healthy...")
-	if err := nw.Healthy(ctx); err != nil {
+	if err := <-healthyChan; err != nil {
 		return err
 	}
 

@@ -1,4 +1,4 @@
-// Copyright (C) 2019-2022, Axia Systems, Inc. All rights reserved.
+// Copyright (C) 2019-2022, Ava Labs, Inc. All rights reserved.
 // See the file LICENSE for licensing terms.
 
 // Package client implements client.
@@ -12,9 +12,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/axiacoin/axia-network-runner/local"
-	"github.com/axiacoin/axia-network-runner/pkg/logutil"
-	"github.com/axiacoin/axia-network-runner/rpcpb"
+	"github.com/axiacoin/axia-network-v2-runner/pkg/color"
+	"github.com/axiacoin/axia-network-v2-runner/pkg/logutil"
+	"github.com/axiacoin/axia-network-v2-runner/rpcpb"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
@@ -36,16 +36,9 @@ type Client interface {
 	Status(ctx context.Context) (*rpcpb.StatusResponse, error)
 	StreamStatus(ctx context.Context, pushInterval time.Duration) (<-chan *rpcpb.ClusterInfo, error)
 	RemoveNode(ctx context.Context, name string) (*rpcpb.RemoveNodeResponse, error)
-	RestartNode(ctx context.Context, name string, opts ...OpOption) (*rpcpb.RestartNodeResponse, error)
-	AddNode(ctx context.Context, name string, execPath string, opts ...OpOption) (*rpcpb.AddNodeResponse, error)
+	RestartNode(ctx context.Context, name string, execPath string, opts ...OpOption) (*rpcpb.RestartNodeResponse, error)
 	Stop(ctx context.Context) (*rpcpb.StopResponse, error)
-	AttachPeer(ctx context.Context, nodeName string) (*rpcpb.AttachPeerResponse, error)
-	SendOutboundMessage(ctx context.Context, nodeName string, peerID string, op uint32, msgBody []byte) (*rpcpb.SendOutboundMessageResponse, error)
 	Close() error
-	SaveSnapshot(ctx context.Context, snapshotName string) (*rpcpb.SaveSnapshotResponse, error)
-	LoadSnapshot(ctx context.Context, snapshotName string) (*rpcpb.LoadSnapshotResponse, error)
-	RemoveSnapshot(ctx context.Context, snapshotName string) (*rpcpb.RemoveSnapshotResponse, error)
-	GetSnapshotNames(ctx context.Context) ([]string, error)
 }
 
 type client struct {
@@ -69,8 +62,7 @@ func New(cfg Config) (Client, error) {
 	}
 	_ = zap.ReplaceGlobals(logger)
 
-	zap.L().Debug("dialing server", zap.String("endpoint", cfg.Endpoint))
-
+	color.Outf("{{blue}}dialing endpoint %q{{/}}\n", cfg.Endpoint)
 	ctx, cancel := context.WithTimeout(context.Background(), cfg.DialTimeout)
 	conn, err := grpc.DialContext(
 		ctx,
@@ -101,34 +93,15 @@ func (c *client) Ping(ctx context.Context) (*rpcpb.PingResponse, error) {
 }
 
 func (c *client) Start(ctx context.Context, execPath string, opts ...OpOption) (*rpcpb.StartResponse, error) {
-	ret := &Op{numNodes: local.DefaultNumNodes}
+	ret := &Op{}
 	ret.applyOpts(opts)
 
-	req := &rpcpb.StartRequest{
-		ExecPath: execPath,
-		NumNodes: &ret.numNodes,
-	}
-	if ret.whitelistedAllychains != "" {
-		req.WhitelistedAllychains = &ret.whitelistedAllychains
-	}
-	if ret.rootDataDir != "" {
-		req.RootDataDir = &ret.rootDataDir
-	}
-	if ret.pluginDir != "" {
-		req.PluginDir = &ret.pluginDir
-	}
-	if len(ret.customVMs) > 0 {
-		req.CustomVms = ret.customVMs
-	}
-	if ret.globalNodeConfig != "" {
-		req.GlobalNodeConfig = &ret.globalNodeConfig
-	}
-	if ret.customNodeConfigs != nil {
-		req.CustomNodeConfigs = ret.customNodeConfigs
-	}
-
 	zap.L().Info("start")
-	return c.controlc.Start(ctx, req)
+	return c.controlc.Start(ctx, &rpcpb.StartRequest{
+		ExecPath:           execPath,
+		WhitelistedSubnets: &ret.whitelistedSubnets,
+		LogLevel:           &ret.logLevel,
+	})
 }
 
 func (c *client) Health(ctx context.Context) (*rpcpb.HealthResponse, error) {
@@ -202,89 +175,23 @@ func (c *client) Stop(ctx context.Context) (*rpcpb.StopResponse, error) {
 	return c.controlc.Stop(ctx, &rpcpb.StopRequest{})
 }
 
-func (c *client) AddNode(ctx context.Context, name string, execPath string, opts ...OpOption) (*rpcpb.AddNodeResponse, error) {
-	ret := &Op{}
-	ret.applyOpts(opts)
-
-	req := &rpcpb.AddNodeRequest{
-		Name:         name,
-		StartRequest: &rpcpb.StartRequest{},
-	}
-	if ret.whitelistedAllychains != "" {
-		req.StartRequest.WhitelistedAllychains = &ret.whitelistedAllychains
-	}
-	if ret.execPath != "" {
-		req.StartRequest.ExecPath = ret.execPath
-	}
-	if ret.pluginDir != "" {
-		req.StartRequest.PluginDir = &ret.pluginDir
-	}
-
-	zap.L().Info("add node", zap.String("name", name))
-	return c.controlc.AddNode(ctx, req)
-}
-
 func (c *client) RemoveNode(ctx context.Context, name string) (*rpcpb.RemoveNodeResponse, error) {
 	zap.L().Info("remove node", zap.String("name", name))
 	return c.controlc.RemoveNode(ctx, &rpcpb.RemoveNodeRequest{Name: name})
 }
 
-func (c *client) RestartNode(ctx context.Context, name string, opts ...OpOption) (*rpcpb.RestartNodeResponse, error) {
+func (c *client) RestartNode(ctx context.Context, name string, execPath string, opts ...OpOption) (*rpcpb.RestartNodeResponse, error) {
 	ret := &Op{}
 	ret.applyOpts(opts)
 
-	req := &rpcpb.RestartNodeRequest{Name: name}
-	if ret.execPath != "" {
-		req.ExecPath = &ret.execPath
-	}
-	if ret.whitelistedAllychains != "" {
-		req.WhitelistedAllychains = &ret.whitelistedAllychains
-	}
-	if ret.rootDataDir != "" {
-		req.RootDataDir = &ret.rootDataDir
-	}
-
 	zap.L().Info("restart node", zap.String("name", name))
-	return c.controlc.RestartNode(ctx, req)
-}
-
-func (c *client) AttachPeer(ctx context.Context, nodeName string) (*rpcpb.AttachPeerResponse, error) {
-	zap.L().Info("attaching peer", zap.String("node-name", nodeName))
-	return c.controlc.AttachPeer(ctx, &rpcpb.AttachPeerRequest{NodeName: nodeName})
-}
-
-func (c *client) SendOutboundMessage(ctx context.Context, nodeName string, peerID string, op uint32, msgBody []byte) (*rpcpb.SendOutboundMessageResponse, error) {
-	zap.L().Info("sending outbound message", zap.String("node-name", nodeName), zap.String("peer-id", peerID))
-	return c.controlc.SendOutboundMessage(ctx, &rpcpb.SendOutboundMessageRequest{
-		NodeName: nodeName,
-		PeerId:   peerID,
-		Op:       op,
-		Bytes:    msgBody,
+	return c.controlc.RestartNode(ctx, &rpcpb.RestartNodeRequest{
+		Name: name,
+		StartRequest: &rpcpb.StartRequest{
+			ExecPath:           execPath,
+			WhitelistedSubnets: &ret.whitelistedSubnets,
+		},
 	})
-}
-
-func (c *client) SaveSnapshot(ctx context.Context, snapshotName string) (*rpcpb.SaveSnapshotResponse, error) {
-	zap.L().Info("save snapshot", zap.String("snapshot-name", snapshotName))
-	return c.controlc.SaveSnapshot(ctx, &rpcpb.SaveSnapshotRequest{SnapshotName: snapshotName})
-}
-
-func (c *client) LoadSnapshot(ctx context.Context, snapshotName string) (*rpcpb.LoadSnapshotResponse, error) {
-	zap.L().Info("load snapshot", zap.String("snapshot-name", snapshotName))
-	return c.controlc.LoadSnapshot(ctx, &rpcpb.LoadSnapshotRequest{SnapshotName: snapshotName})
-}
-
-func (c *client) RemoveSnapshot(ctx context.Context, snapshotName string) (*rpcpb.RemoveSnapshotResponse, error) {
-	zap.L().Info("remove snapshot", zap.String("snapshot-name", snapshotName))
-	return c.controlc.RemoveSnapshot(ctx, &rpcpb.RemoveSnapshotRequest{SnapshotName: snapshotName})
-}
-
-func (c *client) GetSnapshotNames(ctx context.Context) ([]string, error) {
-	zap.L().Info("get snapshot names")
-	resp, err := c.controlc.GetSnapshotNames(ctx, &rpcpb.GetSnapshotNamesRequest{})
-	if err != nil {
-		return nil, err
-	}
-	return resp.SnapshotNames, nil
 }
 
 func (c *client) Close() error {
@@ -295,14 +202,8 @@ func (c *client) Close() error {
 }
 
 type Op struct {
-	numNodes           uint32
-	execPath           string
-	whitelistedAllychains string
-	globalNodeConfig   string
-	rootDataDir        string
-	pluginDir          string
-	customVMs          map[string]string
-	customNodeConfigs  map[string]string
+	whitelistedSubnets string
+	logLevel           string
 }
 
 type OpOption func(*Op)
@@ -313,53 +214,15 @@ func (op *Op) applyOpts(opts []OpOption) {
 	}
 }
 
-func WithGlobalNodeConfig(nodeConfig string) OpOption {
+func WithWhitelistedSubnets(whitelistedSubnets string) OpOption {
 	return func(op *Op) {
-		op.globalNodeConfig = nodeConfig
+		op.whitelistedSubnets = whitelistedSubnets
 	}
 }
 
-func WithNumNodes(numNodes uint32) OpOption {
+func WithLogLevel(logLevel string) OpOption {
 	return func(op *Op) {
-		op.numNodes = numNodes
-	}
-}
-
-func WithExecPath(execPath string) OpOption {
-	return func(op *Op) {
-		op.execPath = execPath
-	}
-}
-
-func WithWhitelistedAllychains(whitelistedAllychains string) OpOption {
-	return func(op *Op) {
-		op.whitelistedAllychains = whitelistedAllychains
-	}
-}
-
-func WithRootDataDir(rootDataDir string) OpOption {
-	return func(op *Op) {
-		op.rootDataDir = rootDataDir
-	}
-}
-
-func WithPluginDir(pluginDir string) OpOption {
-	return func(op *Op) {
-		op.pluginDir = pluginDir
-	}
-}
-
-// Map from VM name to its genesis path.
-func WithCustomVMs(customVMs map[string]string) OpOption {
-	return func(op *Op) {
-		op.customVMs = customVMs
-	}
-}
-
-// Map from node name to its custom node config
-func WithCustomNodeConfigs(customNodeConfigs map[string]string) OpOption {
-	return func(op *Op) {
-		op.customNodeConfigs = customNodeConfigs
+		op.logLevel = logLevel
 	}
 }
 

@@ -3,14 +3,13 @@ package main
 import (
 	"context"
 	"fmt"
-	"go/build"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
 
-	"github.com/axiacoin/axia-network-runner/local"
-	"github.com/axiacoin/axia-network-runner/network"
+	"github.com/axiacoin/axia-network-v2-runner/local"
+	"github.com/axiacoin/axia-network-v2-runner/network"
 	"github.com/axiacoin/axia-network-v2/utils/logging"
 )
 
@@ -40,25 +39,24 @@ func shutdownOnSignal(
 	close(closedOnShutdownChan)
 }
 
-// Shows example usage of the Axia Network Runner.
-// Creates a local five node Axia network
+// Shows example usage of the Avalanche Network Runner.
+// Creates a local five node Avalanche network
 // and waits for all nodes to become healthy.
 // The network runs until the user provides a SIGINT or SIGTERM.
 func main() {
 	// Create the logger
-	logFactory := logging.NewFactory(logging.Config{
-		DisplayLevel: logging.Info,
-		LogLevel:     logging.Debug,
-	})
+	loggingConfig, err := logging.DefaultConfig()
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	logFactory := logging.NewFactory(loggingConfig)
 	log, err := logFactory.Make("main")
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-	if goPath == "" {
-		goPath = build.Default.GOPATH
-	}
-	binaryPath := fmt.Sprintf("%s%s", goPath, "/src/github.com/axiacoin/axia-network-v2/build/axia")
+	binaryPath := fmt.Sprintf("%s%s", goPath, "/src/github.com/axiacoin/axia-network-v2/build/avalanchego")
 	if err := run(log, binaryPath); err != nil {
 		log.Fatal("%s", err)
 		os.Exit(1)
@@ -89,8 +87,9 @@ func run(log logging.Logger, binaryPath string) error {
 	// Wait until the nodes in the network are ready
 	ctx, cancel := context.WithTimeout(context.Background(), healthyTimeout)
 	defer cancel()
+	healthyChan := nw.Healthy(ctx)
 	log.Info("waiting for all nodes to report healthy...")
-	if err := nw.Healthy(ctx); err != nil {
+	if err := <-healthyChan; err != nil {
 		return err
 	}
 

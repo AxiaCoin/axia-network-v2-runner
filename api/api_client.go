@@ -20,13 +20,13 @@ var (
 	_ NewAPIClientF = NewAPIClient
 )
 
-// APIClient gives access to most axia apis (or suitable wrappers)
+// APIClient gives access to most avalanchego apis (or suitable wrappers)
 type APIClient struct {
 	platform     platformvm.Client
-	swapChain       avm.Client
-	swapChainAXIAWallet avm.AXIAWalletClient
-	axChain       evm.Client
-	axChainEth    EthClient
+	xChain       avm.Client
+	xChainWallet avm.WalletClient
+	cChain       evm.Client
+	cChainEth    EthClient
 	info         info.Client
 	health       health.Client
 	ipcs         ipcs.Client
@@ -39,43 +39,43 @@ type APIClient struct {
 // Returns a new API client for a node at [ipAddr]:[port].
 type NewAPIClientF func(ipAddr string, port uint16) Client
 
-// NewAPIClient initialize most of axia apis
+// NewAPIClient initialize most of avalanchego apis
 func NewAPIClient(ipAddr string, port uint16) Client {
 	uri := fmt.Sprintf("http://%s:%d", ipAddr, port)
 	return &APIClient{
 		platform:     platformvm.NewClient(uri),
-		swapChain:       avm.NewClient(uri, "Swap"),
-		swapChainAXIAWallet: avm.NewAXIAWalletClient(uri, "Swap"),
-		axChain:       evm.NewAXChainClient(uri),
-		axChainEth:    NewEthClient(ipAddr, uint(port)), // wrapper over ethclient.Client
+		xChain:       avm.NewClient(uri, "X"),
+		xChainWallet: avm.NewWalletClient(uri, "X"),
+		cChain:       evm.NewCChainClient(uri),
+		cChainEth:    NewEthClient(ipAddr, uint(port)), // wrapper over ethclient.Client
 		info:         info.NewClient(uri),
 		health:       health.NewClient(uri),
 		ipcs:         ipcs.NewClient(uri),
 		keystore:     keystore.NewClient(uri),
 		admin:        admin.NewClient(uri),
-		pindex:       indexer.NewClient(uri),
-		cindex:       indexer.NewClient(uri),
+		pindex:       indexer.NewClient(uri, "/ext/index/P/block"),
+		cindex:       indexer.NewClient(uri, "/ext/index/C/block"),
 	}
 }
 
-func (c APIClient) CoreChainAPI() platformvm.Client {
+func (c APIClient) PChainAPI() platformvm.Client {
 	return c.platform
 }
 
-func (c APIClient) SwapChainAPI() avm.Client {
-	return c.swapChain
+func (c APIClient) XChainAPI() avm.Client {
+	return c.xChain
 }
 
-func (c APIClient) SwapChainAXIAWalletAPI() avm.AXIAWalletClient {
-	return c.swapChainAXIAWallet
+func (c APIClient) XChainWalletAPI() avm.WalletClient {
+	return c.xChainWallet
 }
 
-func (c APIClient) AXChainAPI() evm.Client {
-	return c.axChain
+func (c APIClient) CChainAPI() evm.Client {
+	return c.cChain
 }
 
-func (c APIClient) AXChainEthAPI() EthClient {
-	return c.axChainEth
+func (c APIClient) CChainEthAPI() EthClient {
+	return c.cChainEth
 }
 
 func (c APIClient) InfoAPI() info.Client {
@@ -98,10 +98,10 @@ func (c APIClient) AdminAPI() admin.Client {
 	return c.admin
 }
 
-func (c APIClient) CoreChainIndexAPI() indexer.Client {
+func (c APIClient) PChainIndexAPI() indexer.Client {
 	return c.pindex
 }
 
-func (c APIClient) AXChainIndexAPI() indexer.Client {
+func (c APIClient) CChainIndexAPI() indexer.Client {
 	return c.cindex
 }

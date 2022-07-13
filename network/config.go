@@ -7,24 +7,25 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/axiacoin/axia-network-runner/network/node"
-	"github.com/axiacoin/axia-network-runner/utils"
+	"github.com/axiacoin/axia-network-v2-runner/network/node"
+	"github.com/axiacoin/axia-network-v2-runner/utils"
 	"github.com/axiacoin/axia-network-v2/genesis"
 	"github.com/axiacoin/axia-network-v2/ids"
 	"github.com/axiacoin/axia-network-v2/utils/constants"
-	"github.com/axiacoin/axia-network-v2/utils/formatting/address"
+	"github.com/axiacoin/axia-network-v2/utils/formatting"
+	"github.com/axiacoin/axia-network-v2/utils/logging"
 	"github.com/axiacoin/axia-network-v2/utils/units"
 )
 
-var axChainConfig map[string]interface{}
+var cChainConfig map[string]interface{}
 
 const (
-	validatorStake         = units.MegaAxc
-	defaultAXChainConfigStr = "{\"config\":{\"chainId\":43115,\"homesteadBlock\":0,\"daoForkBlock\":0,\"daoForkSupport\":true,\"eip150Block\":0,\"eip150Hash\":\"0x2086799aeebeae135c246c65021c82b4e15a2c451340993aacfd2751886514f0\",\"eip155Block\":0,\"eip158Block\":0,\"byzantiumBlock\":0,\"constantinopleBlock\":0,\"petersburgBlock\":0,\"istanbulBlock\":0,\"muirGlacierBlock\":0,\"apricotPhase1BlockTimestamp\":0,\"apricotPhase2BlockTimestamp\":0,\"apricotPhase3BlockTimestamp\":0,\"apricotPhase4BlockTimestamp\":0,\"apricotPhase5BlockTimestamp\":0},\"nonce\":\"0x0\",\"timestamp\":\"0x0\",\"extraData\":\"0x00\",\"gasLimit\":\"0x5f5e100\",\"difficulty\":\"0x0\",\"mixHash\":\"0x0000000000000000000000000000000000000000000000000000000000000000\",\"coinbase\":\"0x0000000000000000000000000000000000000000\",\"number\":\"0x0\",\"gasUsed\":\"0x0\",\"parentHash\":\"0x0000000000000000000000000000000000000000000000000000000000000000\"}"
+	validatorStake         = units.MegaAvax
+	defaultCChainConfigStr = "{\"config\":{\"chainId\":43115,\"homesteadBlock\":0,\"daoForkBlock\":0,\"daoForkSupport\":true,\"eip150Block\":0,\"eip150Hash\":\"0x2086799aeebeae135c246c65021c82b4e15a2c451340993aacfd2751886514f0\",\"eip155Block\":0,\"eip158Block\":0,\"byzantiumBlock\":0,\"constantinopleBlock\":0,\"petersburgBlock\":0,\"istanbulBlock\":0,\"muirGlacierBlock\":0,\"apricotPhase1BlockTimestamp\":0,\"apricotPhase2BlockTimestamp\":0,\"apricotPhase3BlockTimestamp\":0,\"apricotPhase4BlockTimestamp\":0,\"apricotPhase5BlockTimestamp\":0},\"nonce\":\"0x0\",\"timestamp\":\"0x0\",\"extraData\":\"0x00\",\"gasLimit\":\"0x5f5e100\",\"difficulty\":\"0x0\",\"mixHash\":\"0x0000000000000000000000000000000000000000000000000000000000000000\",\"coinbase\":\"0x0000000000000000000000000000000000000000\",\"number\":\"0x0\",\"gasUsed\":\"0x0\",\"parentHash\":\"0x0000000000000000000000000000000000000000000000000000000000000000\"}"
 )
 
 func init() {
-	if err := json.Unmarshal([]byte(defaultAXChainConfigStr), &axChainConfig); err != nil {
+	if err := json.Unmarshal([]byte(defaultCChainConfigStr), &cChainConfig); err != nil {
 		panic(err)
 	}
 }
@@ -35,13 +36,53 @@ type AddrAndBalance struct {
 	Balance uint64
 }
 
+// Backend is the type of network runner to use
+type Backend byte
+
+const (
+	// Local network runner
+	Local Backend = iota + 1
+	// Kubernetes network runner
+	Kubernetes
+)
+
+func (b Backend) MarshalJSON() ([]byte, error) {
+	switch b {
+	case Local:
+		return []byte("\"local\""), nil
+	case Kubernetes:
+		return []byte("\"k8s\""), nil
+	default:
+		return nil, fmt.Errorf("got unexpected backend %v", b)
+	}
+}
+
+func (b *Backend) UnmarshalJSON(bytes []byte) error {
+	switch string(bytes) {
+	case "\"local\"":
+		*b = Local
+		return nil
+	case "\"k8s\"":
+		*b = Kubernetes
+		return nil
+	default:
+		return fmt.Errorf("got unexpected backend %s", string(bytes))
+	}
+}
+
 // Config that defines a network when it is created.
 type Config struct {
-	// Must not be empty
+	// Must not be nil
 	Genesis string `json:"genesis"`
 	// May have length 0
 	// (i.e. network may have no nodes on creation.)
 	NodeConfigs []node.Config `json:"nodeConfigs"`
+	// Log level for the whole network
+	LogLevel string `json:"logLevel"`
+	// Name for the network
+	Name string `json:"name"`
+	// Backend specifies the backend for the network
+	Backend Backend `json:"backend"`
 	// Flags that will be passed to each node in this network.
 	// It can be empty.
 	// Config flags may also be passed in a node's config struct
@@ -90,15 +131,16 @@ func (c *Config) Validate() error {
 
 // Return a genesis JSON where:
 // The nodes in [genesisVdrs] are validators.
-// The AXChain and SwapChain balances are given by
-// [axChainBalances] and [swapChainBalances].
+// The C-Chain and X-Chain balances are given by
+// [cChainBalances] and [xChainBalances].
 // Note that many of the genesis fields (i.e. reward addresses)
 // are randomly generated or hard-coded.
-func NewAxiaGenesis(
+func NewAvalancheGoGenesis(
+	log logging.Logger,
 	networkID uint32,
-	swapChainBalances []AddrAndBalance,
-	axChainBalances []AddrAndBalance,
-	genesisVdrs []ids.NodeID,
+	xChainBalances []AddrAndBalance,
+	cChainBalances []AddrAndBalance,
+	genesisVdrs []ids.ShortID,
 ) ([]byte, error) {
 	switch networkID {
 	case constants.TestnetID, constants.MainnetID, constants.LocalID:
@@ -107,22 +149,18 @@ func NewAxiaGenesis(
 	switch {
 	case len(genesisVdrs) == 0:
 		return nil, errors.New("no genesis validators provided")
-	case len(swapChainBalances)+len(axChainBalances) == 0:
+	case len(xChainBalances)+len(cChainBalances) == 0:
 		return nil, errors.New("no genesis balances given")
 	}
 
 	// Address that controls stake doesn't matter -- generate it randomly
-	genesisVdrStakeAddr, _ := address.Format(
-		"Swap",
-		constants.GetHRP(networkID),
-		ids.GenerateTestShortID().Bytes(),
-	)
+	genesisVdrStakeAddr, _ := formatting.FormatAddress("X", constants.GetHRP(networkID), ids.GenerateTestShortID().Bytes())
 	config := genesis.UnparsedConfig{
 		NetworkID: networkID,
 		Allocations: []genesis.UnparsedAllocation{
 			{
 				ETHAddr:       "0x0000000000000000000000000000000000000000",
-				AXCAddr:      genesisVdrStakeAddr, // Owner doesn't matter
+				AVAXAddr:      genesisVdrStakeAddr, // Owner doesn't matter
 				InitialAmount: 0,
 				UnlockSchedule: []genesis.LockedAmount{ // Provides stake to validators
 					{
@@ -138,14 +176,14 @@ func NewAxiaGenesis(
 		Message:                    "hello world",
 	}
 
-	for _, swapChainBal := range swapChainBalances {
-		swapChainAddr, _ := address.Format("Swap", constants.GetHRP(networkID), swapChainBal.Addr[:])
+	for _, xChainBal := range xChainBalances {
+		xChainAddr, _ := formatting.FormatAddress("X", constants.GetHRP(networkID), xChainBal.Addr[:])
 		config.Allocations = append(
 			config.Allocations,
 			genesis.UnparsedAllocation{
 				ETHAddr:       "0x0000000000000000000000000000000000000000",
-				AXCAddr:      swapChainAddr,
-				InitialAmount: swapChainBal.Balance,
+				AVAXAddr:      xChainAddr,
+				InitialAmount: xChainBal.Balance,
 				UnlockSchedule: []genesis.LockedAmount{
 					{
 						Amount:   validatorStake * uint64(len(genesisVdrs)), // Stake
@@ -156,38 +194,33 @@ func NewAxiaGenesis(
 		)
 	}
 
-	// Set initial AXChain balances.
-	axChainAllocs := map[string]interface{}{}
-	for _, axChainBal := range axChainBalances {
-		addrHex := fmt.Sprintf("0x%s", axChainBal.Addr.Hex())
-		balHex := fmt.Sprintf("0x%x", axChainBal.Balance)
-		axChainAllocs[addrHex] = map[string]interface{}{
+	// Set initial C-Chain balances.
+	cChainAllocs := map[string]interface{}{}
+	for _, cChainBal := range cChainBalances {
+		addrHex := fmt.Sprintf("0x%s", cChainBal.Addr.Hex())
+		balHex := fmt.Sprintf("0x%x", cChainBal.Balance)
+		cChainAllocs[addrHex] = map[string]interface{}{
 			"balance": balHex,
 		}
 	}
-	// avoid modifying original axChainConfig
-	localAXChainConfig := map[string]interface{}{}
-	for k, v := range axChainConfig {
-		localAXChainConfig[k] = v
-	}
-	localAXChainConfig["alloc"] = axChainAllocs
-	axChainConfigBytes, _ := json.Marshal(localAXChainConfig)
-	config.AXChainGenesis = string(axChainConfigBytes)
+	cChainConfig["alloc"] = cChainAllocs
+	cChainConfigBytes, _ := json.Marshal(cChainConfig)
+	config.CChainGenesis = string(cChainConfigBytes)
 
 	// Set initial validators.
 	// Give staking rewards to random address.
-	rewardAddr, _ := address.Format("Swap", constants.GetHRP(networkID), ids.GenerateTestShortID().Bytes())
+	rewardAddr, _ := formatting.FormatAddress("X", constants.GetHRP(networkID), ids.GenerateTestShortID().Bytes())
 	for _, genesisVdr := range genesisVdrs {
 		config.InitialStakers = append(
 			config.InitialStakers,
 			genesis.UnparsedStaker{
-				NodeID:        genesisVdr,
+				NodeID:        genesisVdr.PrefixedString(constants.NodeIDPrefix),
 				RewardAddress: rewardAddr,
 				DelegationFee: 10_000,
 			},
 		)
 	}
 
-	// TODO add validation (from Axia's function validateConfig?)
+	// TODO add validation (from AvalancheGo's function validateConfig?)
 	return json.Marshal(config)
 }

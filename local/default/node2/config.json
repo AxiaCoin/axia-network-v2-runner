@@ -7,6 +7,5 @@
   "index-enabled":true,
   "public-ip":"127.0.0.1",
   "log-display-level":"ERROR",
-  "log-level": "DEBUG",
-  "http-port": 9654
+  "log-level":"DEBUG"
 }

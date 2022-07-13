@@ -114,15 +114,8 @@ type ControlServiceClient interface {
 	Status(ctx context.Context, in *StatusRequest, opts ...grpc.CallOption) (*StatusResponse, error)
 	StreamStatus(ctx context.Context, in *StreamStatusRequest, opts ...grpc.CallOption) (ControlService_StreamStatusClient, error)
 	RemoveNode(ctx context.Context, in *RemoveNodeRequest, opts ...grpc.CallOption) (*RemoveNodeResponse, error)
-	AddNode(ctx context.Context, in *AddNodeRequest, opts ...grpc.CallOption) (*AddNodeResponse, error)
 	RestartNode(ctx context.Context, in *RestartNodeRequest, opts ...grpc.CallOption) (*RestartNodeResponse, error)
 	Stop(ctx context.Context, in *StopRequest, opts ...grpc.CallOption) (*StopResponse, error)
-	AttachPeer(ctx context.Context, in *AttachPeerRequest, opts ...grpc.CallOption) (*AttachPeerResponse, error)
-	SendOutboundMessage(ctx context.Context, in *SendOutboundMessageRequest, opts ...grpc.CallOption) (*SendOutboundMessageResponse, error)
-	SaveSnapshot(ctx context.Context, in *SaveSnapshotRequest, opts ...grpc.CallOption) (*SaveSnapshotResponse, error)
-	LoadSnapshot(ctx context.Context, in *LoadSnapshotRequest, opts ...grpc.CallOption) (*LoadSnapshotResponse, error)
-	RemoveSnapshot(ctx context.Context, in *RemoveSnapshotRequest, opts ...grpc.CallOption) (*RemoveSnapshotResponse, error)
-	GetSnapshotNames(ctx context.Context, in *GetSnapshotNamesRequest, opts ...grpc.CallOption) (*GetSnapshotNamesResponse, error)
 }
 
 type controlServiceClient struct {
@@ -210,15 +203,6 @@ func (c *controlServiceClient) RemoveNode(ctx context.Context, in *RemoveNodeReq
 	return out, nil
 }
 
-func (c *controlServiceClient) AddNode(ctx context.Context, in *AddNodeRequest, opts ...grpc.CallOption) (*AddNodeResponse, error) {
-	out := new(AddNodeResponse)
-	err := c.cc.Invoke(ctx, "/rpcpb.ControlService/AddNode", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *controlServiceClient) RestartNode(ctx context.Context, in *RestartNodeRequest, opts ...grpc.CallOption) (*RestartNodeResponse, error) {
 	out := new(RestartNodeResponse)
 	err := c.cc.Invoke(ctx, "/rpcpb.ControlService/RestartNode", in, out, opts...)
@@ -237,60 +221,6 @@ func (c *controlServiceClient) Stop(ctx context.Context, in *StopRequest, opts .
 	return out, nil
 }
 
-func (c *controlServiceClient) AttachPeer(ctx context.Context, in *AttachPeerRequest, opts ...grpc.CallOption) (*AttachPeerResponse, error) {
-	out := new(AttachPeerResponse)
-	err := c.cc.Invoke(ctx, "/rpcpb.ControlService/AttachPeer", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *controlServiceClient) SendOutboundMessage(ctx context.Context, in *SendOutboundMessageRequest, opts ...grpc.CallOption) (*SendOutboundMessageResponse, error) {
-	out := new(SendOutboundMessageResponse)
-	err := c.cc.Invoke(ctx, "/rpcpb.ControlService/SendOutboundMessage", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *controlServiceClient) SaveSnapshot(ctx context.Context, in *SaveSnapshotRequest, opts ...grpc.CallOption) (*SaveSnapshotResponse, error) {
-	out := new(SaveSnapshotResponse)
-	err := c.cc.Invoke(ctx, "/rpcpb.ControlService/SaveSnapshot", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *controlServiceClient) LoadSnapshot(ctx context.Context, in *LoadSnapshotRequest, opts ...grpc.CallOption) (*LoadSnapshotResponse, error) {
-	out := new(LoadSnapshotResponse)
-	err := c.cc.Invoke(ctx, "/rpcpb.ControlService/LoadSnapshot", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *controlServiceClient) RemoveSnapshot(ctx context.Context, in *RemoveSnapshotRequest, opts ...grpc.CallOption) (*RemoveSnapshotResponse, error) {
-	out := new(RemoveSnapshotResponse)
-	err := c.cc.Invoke(ctx, "/rpcpb.ControlService/RemoveSnapshot", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *controlServiceClient) GetSnapshotNames(ctx context.Context, in *GetSnapshotNamesRequest, opts ...grpc.CallOption) (*GetSnapshotNamesResponse, error) {
-	out := new(GetSnapshotNamesResponse)
-	err := c.cc.Invoke(ctx, "/rpcpb.ControlService/GetSnapshotNames", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // ControlServiceServer is the server API for ControlService service.
 // All implementations must embed UnimplementedControlServiceServer
 // for forward compatibility
@@ -301,15 +231,8 @@ type ControlServiceServer interface {
 	Status(context.Context, *StatusRequest) (*StatusResponse, error)
 	StreamStatus(*StreamStatusRequest, ControlService_StreamStatusServer) error
 	RemoveNode(context.Context, *RemoveNodeRequest) (*RemoveNodeResponse, error)
-	AddNode(context.Context, *AddNodeRequest) (*AddNodeResponse, error)
 	RestartNode(context.Context, *RestartNodeRequest) (*RestartNodeResponse, error)
 	Stop(context.Context, *StopRequest) (*StopResponse, error)
-	AttachPeer(context.Context, *AttachPeerRequest) (*AttachPeerResponse, error)
-	SendOutboundMessage(context.Context, *SendOutboundMessageRequest) (*SendOutboundMessageResponse, error)
-	SaveSnapshot(context.Context, *SaveSnapshotRequest) (*SaveSnapshotResponse, error)
-	LoadSnapshot(context.Context, *LoadSnapshotRequest) (*LoadSnapshotResponse, error)
-	RemoveSnapshot(context.Context, *RemoveSnapshotRequest) (*RemoveSnapshotResponse, error)
-	GetSnapshotNames(context.Context, *GetSnapshotNamesRequest) (*GetSnapshotNamesResponse, error)
 	mustEmbedUnimplementedControlServiceServer()
 }
 
@@ -335,32 +258,11 @@ func (UnimplementedControlServiceServer) StreamStatus(*StreamStatusRequest, Cont
 func (UnimplementedControlServiceServer) RemoveNode(context.Context, *RemoveNodeRequest) (*RemoveNodeResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RemoveNode not implemented")
 }
-func (UnimplementedControlServiceServer) AddNode(context.Context, *AddNodeRequest) (*AddNodeResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AddNode not implemented")
-}
 func (UnimplementedControlServiceServer) RestartNode(context.Context, *RestartNodeRequest) (*RestartNodeResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RestartNode not implemented")
 }
 func (UnimplementedControlServiceServer) Stop(context.Context, *StopRequest) (*StopResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Stop not implemented")
-}
-func (UnimplementedControlServiceServer) AttachPeer(context.Context, *AttachPeerRequest) (*AttachPeerResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AttachPeer not implemented")
-}
-func (UnimplementedControlServiceServer) SendOutboundMessage(context.Context, *SendOutboundMessageRequest) (*SendOutboundMessageResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SendOutboundMessage not implemented")
-}
-func (UnimplementedControlServiceServer) SaveSnapshot(context.Context, *SaveSnapshotRequest) (*SaveSnapshotResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SaveSnapshot not implemented")
-}
-func (UnimplementedControlServiceServer) LoadSnapshot(context.Context, *LoadSnapshotRequest) (*LoadSnapshotResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method LoadSnapshot not implemented")
-}
-func (UnimplementedControlServiceServer) RemoveSnapshot(context.Context, *RemoveSnapshotRequest) (*RemoveSnapshotResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method RemoveSnapshot not implemented")
-}
-func (UnimplementedControlServiceServer) GetSnapshotNames(context.Context, *GetSnapshotNamesRequest) (*GetSnapshotNamesResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetSnapshotNames not implemented")
 }
 func (UnimplementedControlServiceServer) mustEmbedUnimplementedControlServiceServer() {}
 
@@ -486,24 +388,6 @@ func _ControlService_RemoveNode_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ControlService_AddNode_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AddNodeRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ControlServiceServer).AddNode(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/rpcpb.ControlService/AddNode",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ControlServiceServer).AddNode(ctx, req.(*AddNodeRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _ControlService_RestartNode_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(RestartNodeRequest)
 	if err := dec(in); err != nil {
@@ -540,114 +424,6 @@ func _ControlService_Stop_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ControlService_AttachPeer_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AttachPeerRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ControlServiceServer).AttachPeer(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/rpcpb.ControlService/AttachPeer",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ControlServiceServer).AttachPeer(ctx, req.(*AttachPeerRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _ControlService_SendOutboundMessage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SendOutboundMessageRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ControlServiceServer).SendOutboundMessage(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/rpcpb.ControlService/SendOutboundMessage",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ControlServiceServer).SendOutboundMessage(ctx, req.(*SendOutboundMessageRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _ControlService_SaveSnapshot_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SaveSnapshotRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ControlServiceServer).SaveSnapshot(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/rpcpb.ControlService/SaveSnapshot",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ControlServiceServer).SaveSnapshot(ctx, req.(*SaveSnapshotRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _ControlService_LoadSnapshot_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(LoadSnapshotRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ControlServiceServer).LoadSnapshot(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/rpcpb.ControlService/LoadSnapshot",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ControlServiceServer).LoadSnapshot(ctx, req.(*LoadSnapshotRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _ControlService_RemoveSnapshot_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RemoveSnapshotRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ControlServiceServer).RemoveSnapshot(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/rpcpb.ControlService/RemoveSnapshot",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ControlServiceServer).RemoveSnapshot(ctx, req.(*RemoveSnapshotRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _ControlService_GetSnapshotNames_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetSnapshotNamesRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ControlServiceServer).GetSnapshotNames(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/rpcpb.ControlService/GetSnapshotNames",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ControlServiceServer).GetSnapshotNames(ctx, req.(*GetSnapshotNamesRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 // ControlService_ServiceDesc is the grpc.ServiceDesc for ControlService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -676,40 +452,12 @@ var ControlService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _ControlService_RemoveNode_Handler,
 		},
 		{
-			MethodName: "AddNode",
-			Handler:    _ControlService_AddNode_Handler,
-		},
-		{
 			MethodName: "RestartNode",
 			Handler:    _ControlService_RestartNode_Handler,
 		},
 		{
 			MethodName: "Stop",
 			Handler:    _ControlService_Stop_Handler,
-		},
-		{
-			MethodName: "AttachPeer",
-			Handler:    _ControlService_AttachPeer_Handler,
-		},
-		{
-			MethodName: "SendOutboundMessage",
-			Handler:    _ControlService_SendOutboundMessage_Handler,
-		},
-		{
-			MethodName: "SaveSnapshot",
-			Handler:    _ControlService_SaveSnapshot_Handler,
-		},
-		{
-			MethodName: "LoadSnapshot",
-			Handler:    _ControlService_LoadSnapshot_Handler,
-		},
-		{
-			MethodName: "RemoveSnapshot",
-			Handler:    _ControlService_RemoveSnapshot_Handler,
-		},
-		{
-			MethodName: "GetSnapshotNames",
-			Handler:    _ControlService_GetSnapshotNames_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{

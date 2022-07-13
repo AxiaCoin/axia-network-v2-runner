@@ -4,18 +4,22 @@ import (
 	"context"
 	"errors"
 
-	"github.com/axiacoin/axia-network-runner/network/node"
+	"github.com/axiacoin/axia-network-v2-runner/network/node"
 )
 
-var ErrUndefined = errors.New("undefined network")
 var ErrStopped = errors.New("network stopped")
 
-// Network is an abstraction of an Axia network
+// Network is an abstraction of an Avalanche network
 type Network interface {
-	// Returns nil if all the nodes in the network are healthy.
+	// Returns a chan that is closed when
+	// all the nodes in the network are healthy.
+	// If an error is sent on this channel, at least 1
+	// node didn't become healthy before the timeout.
+	// If an error isn't sent on the channel before it
+	// closes, all the nodes are healthy.
 	// A stopped network is considered unhealthy.
 	// Timeout is given by the context parameter.
-	Healthy(context.Context) error
+	Healthy(context.Context) chan error
 	// Stop all the nodes.
 	// Returns ErrStopped if Stop() was previously called.
 	Stop(context.Context) error
@@ -35,12 +39,5 @@ type Network interface {
 	// Returns the names of all nodes in this network.
 	// Returns ErrStopped if Stop() was previously called.
 	GetNodeNames() ([]string, error)
-	// Save network snapshot
-	// Network is stopped in order to do a safe preservation
-	// Returns the full local path to the snapshot dir
-	SaveSnapshot(context.Context, string) (string, error)
-	// Remove network snapshot
-	RemoveSnapshot(string) error
-	// Get name of available snapshots
-	GetSnapshotNames() ([]string, error)
+	// TODO add methods
 }
