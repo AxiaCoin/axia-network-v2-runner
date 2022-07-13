@@ -48,7 +48,7 @@ type localNetwork struct {
 	stopOnce sync.Once
 }
 
-func newNetwork(execPath string, rootDataDir string, whitelistedSubnets string, logLevel string) (*localNetwork, error) {
+func newNetwork(execPath string, rootDataDir string, whitelistedAllychains string, logLevel string) (*localNetwork, error) {
 	lcfg, err := logging.DefaultConfig()
 	if err != nil {
 		return nil, err
@@ -75,7 +75,7 @@ func newNetwork(execPath string, rootDataDir string, whitelistedSubnets string, 
 		nodeNames[i] = nodeName
 		cfg.NodeConfigs[i].Name = nodeName
 
-		// need to whitelist subnet ID to create custom VM chain
+		// need to whitelist allychain ID to create custom VM chain
 		// ref. vms/platformvm/createChain
 		cfg.NodeConfigs[i].ConfigFile = fmt.Sprintf(`{
 	"network-peer-list-gossip-frequency":"250ms",
@@ -89,12 +89,12 @@ func newNetwork(execPath string, rootDataDir string, whitelistedSubnets string, 
 	"log-level":"%s",
 	"log-dir":"%s",
 	"db-dir":"%s",
-	"whitelisted-subnets":"%s"
+	"whitelisted-allychains":"%s"
 }`,
 			strings.ToUpper(logLevel),
 			logDir,
 			dbDir,
-			whitelistedSubnets,
+			whitelistedAllychains,
 		)
 		cfg.NodeConfigs[i].ImplSpecificConfig = json.RawMessage(fmt.Sprintf(`{"binaryPath":"%s","redirectStdout":true,"redirectStderr":true}`, execPath))
 
@@ -105,7 +105,7 @@ func newNetwork(execPath string, rootDataDir string, whitelistedSubnets string, 
 			Id:                 "",
 			LogDir:             logDir,
 			DbDir:              dbDir,
-			WhitelistedSubnets: whitelistedSubnets,
+			WhitelistedAllychains: whitelistedAllychains,
 			Config:             []byte(cfg.NodeConfigs[i].ConfigFile),
 		}
 	}

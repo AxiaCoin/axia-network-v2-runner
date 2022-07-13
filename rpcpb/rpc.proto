@@ -94,13 +94,13 @@ message NodeInfo {
   string id                   = 4;
   string log_dir              = 5;
   string db_dir               = 6;
-  string whitelisted_subnets  = 7;
+  string whitelisted_allychains  = 7;
   bytes config                = 8;
 }
 
 message StartRequest {
   string exec_path                    = 1;
-  optional string whitelisted_subnets = 2;
+  optional string whitelisted_allychains = 2;
   optional string log_level           = 3;
 }
 

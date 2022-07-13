@@ -270,14 +270,14 @@ To start the server:
 
 ```bash
 # replace with your local path
-curl -X POST -k http://localhost:8081/v1/control/start -d '{"execPath":"/Users/gyuho.lee/go/src/github.com/axiacoin/axia-network-v2/build/axia","whitelistedSubnets":"24tZhrm8j8GCJRE9PomW8FaeqbgGS4UAQjJnqqn8pq5NwYSYV1","logLevel":"INFO"}'
+curl -X POST -k http://localhost:8081/v1/control/start -d '{"execPath":"/Users/gyuho.lee/go/src/github.com/axiacoin/axia-network-v2/build/axia","whitelistedAllychains":"24tZhrm8j8GCJRE9PomW8FaeqbgGS4UAQjJnqqn8pq5NwYSYV1","logLevel":"INFO"}'
 
 # or
 axia-network-runner control start \
 --log-level debug \
 --endpoint="0.0.0.0:8080" \
 --axia-path ${HOME}/go/src/github.com/axiacoin/axia-network-v2/build/axia \
---whitelisted-subnets="24tZhrm8j8GCJRE9PomW8FaeqbgGS4UAQjJnqqn8pq5NwYSYV1"
+--whitelisted-allychains="24tZhrm8j8GCJRE9PomW8FaeqbgGS4UAQjJnqqn8pq5NwYSYV1"
 ```
 
 To wait for the cluster health:
@@ -371,7 +371,7 @@ find /tmp/axia-v${VERSION}
 To restart a node:
 
 ```bash
-curl -X POST -k http://localhost:8081/v1/control/restartnode -d '{"name":"node1","startRequest":{"execPath":"/tmp/axia-v1.7.3/build/axia",whitelistedSubnets:"",,"logLevel":"INFO"}}'
+curl -X POST -k http://localhost:8081/v1/control/restartnode -d '{"name":"node1","startRequest":{"execPath":"/tmp/axia-v1.7.3/build/axia",whitelistedAllychains:"",,"logLevel":"INFO"}}'
 
 # or
 axia-network-runner control restart-node \
@@ -380,7 +380,7 @@ axia-network-runner control restart-node \
 --endpoint="0.0.0.0:8080" \
 --node-name node1 \
 --axia-path /tmp/axia-v1.7.3/build/axia \
---whitelisted-subnets=""
+--whitelisted-allychains=""
 ```
 
 To terminate the cluster:

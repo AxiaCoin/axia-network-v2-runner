@@ -99,7 +99,7 @@ func (c *client) Start(ctx context.Context, execPath string, opts ...OpOption) (
 	zap.L().Info("start")
 	return c.controlc.Start(ctx, &rpcpb.StartRequest{
 		ExecPath:           execPath,
-		WhitelistedSubnets: &ret.whitelistedSubnets,
+		WhitelistedAllychains: &ret.whitelistedAllychains,
 		LogLevel:           &ret.logLevel,
 	})
 }
@@ -189,7 +189,7 @@ func (c *client) RestartNode(ctx context.Context, name string, execPath string, 
 		Name: name,
 		StartRequest: &rpcpb.StartRequest{
 			ExecPath:           execPath,
-			WhitelistedSubnets: &ret.whitelistedSubnets,
+			WhitelistedAllychains: &ret.whitelistedAllychains,
 		},
 	})
 }
@@ -202,7 +202,7 @@ func (c *client) Close() error {
 }
 
 type Op struct {
-	whitelistedSubnets string
+	whitelistedAllychains string
 	logLevel           string
 }
 
@@ -214,9 +214,9 @@ func (op *Op) applyOpts(opts []OpOption) {
 	}
 }
 
-func WithWhitelistedSubnets(whitelistedSubnets string) OpOption {
+func WithWhitelistedAllychains(whitelistedAllychains string) OpOption {
 	return func(op *Op) {
-		op.whitelistedSubnets = whitelistedSubnets
+		op.whitelistedAllychains = whitelistedAllychains
 	}
 }
 

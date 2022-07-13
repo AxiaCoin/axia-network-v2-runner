@@ -196,7 +196,7 @@ type NodeInfo struct {
 	Id                 string `protobuf:"bytes,4,opt,name=id,proto3" json:"id,omitempty"`
 	LogDir             string `protobuf:"bytes,5,opt,name=log_dir,json=logDir,proto3" json:"log_dir,omitempty"`
 	DbDir              string `protobuf:"bytes,6,opt,name=db_dir,json=dbDir,proto3" json:"db_dir,omitempty"`
-	WhitelistedSubnets string `protobuf:"bytes,7,opt,name=whitelisted_subnets,json=whitelistedSubnets,proto3" json:"whitelisted_subnets,omitempty"`
+	WhitelistedAllychains string `protobuf:"bytes,7,opt,name=whitelisted_allychains,json=whitelistedAllychains,proto3" json:"whitelisted_allychains,omitempty"`
 	Config             []byte `protobuf:"bytes,8,opt,name=config,proto3" json:"config,omitempty"`
 }
 
@@ -274,9 +274,9 @@ func (x *NodeInfo) GetDbDir() string {
 	return ""
 }
 
-func (x *NodeInfo) GetWhitelistedSubnets() string {
+func (x *NodeInfo) GetWhitelistedAllychains() string {
 	if x != nil {
-		return x.WhitelistedSubnets
+		return x.WhitelistedAllychains
 	}
 	return ""
 }
@@ -294,7 +294,7 @@ type StartRequest struct {
 	unknownFields protoimpl.UnknownFields
 
 	ExecPath           string  `protobuf:"bytes,1,opt,name=exec_path,json=execPath,proto3" json:"exec_path,omitempty"`
-	WhitelistedSubnets *string `protobuf:"bytes,2,opt,name=whitelisted_subnets,json=whitelistedSubnets,proto3,oneof" json:"whitelisted_subnets,omitempty"`
+	WhitelistedAllychains *string `protobuf:"bytes,2,opt,name=whitelisted_allychains,json=whitelistedAllychains,proto3,oneof" json:"whitelisted_allychains,omitempty"`
 	LogLevel           *string `protobuf:"bytes,3,opt,name=log_level,json=logLevel,proto3,oneof" json:"log_level,omitempty"`
 }
 
@@ -337,9 +337,9 @@ func (x *StartRequest) GetExecPath() string {
 	return ""
 }
 
-func (x *StartRequest) GetWhitelistedSubnets() string {
-	if x != nil && x.WhitelistedSubnets != nil {
-		return *x.WhitelistedSubnets
+func (x *StartRequest) GetWhitelistedAllychains() string {
+	if x != nil && x.WhitelistedAllychains != nil {
+		return *x.WhitelistedAllychains
 	}
 	return ""
 }

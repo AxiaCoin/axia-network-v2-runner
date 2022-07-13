@@ -196,7 +196,7 @@ func (s *server) Start(ctx context.Context, req *rpcpb.StartRequest) (*rpcpb.Sta
 	}
 	zap.L().Info("starting",
 		zap.String("execPath", req.ExecPath),
-		zap.String("whitelistedSubnets", req.GetWhitelistedSubnets()),
+		zap.String("whitelistedAllychains", req.GetWhitelistedAllychains()),
 		zap.Int32("pid", s.clusterInfo.GetPid()),
 		zap.String("rootDataDir", s.clusterInfo.GetRootDataDir()),
 	)
@@ -211,7 +211,7 @@ func (s *server) Start(ctx context.Context, req *rpcpb.StartRequest) (*rpcpb.Sta
 		return nil, ErrAlreadyBootstrapped
 	}
 
-	s.network, err = newNetwork(req.GetExecPath(), rootDataDir, req.GetWhitelistedSubnets(), req.GetLogLevel())
+	s.network, err = newNetwork(req.GetExecPath(), rootDataDir, req.GetWhitelistedAllychains(), req.GetLogLevel())
 	if err != nil {
 		return nil, err
 	}
@@ -445,7 +445,7 @@ func (s *server) RestartNode(ctx context.Context, req *rpcpb.RestartNodeRequest)
 
 	// keep everything same except config file and binary path
 	nodeInfo.ExecPath = req.StartRequest.ExecPath
-	nodeInfo.WhitelistedSubnets = *req.StartRequest.WhitelistedSubnets
+	nodeInfo.WhitelistedAllychains = *req.StartRequest.WhitelistedAllychains
 	nodeConfig.ConfigFile = fmt.Sprintf(`{
 	"network-peer-list-gossip-frequency":"250ms",
 	"network-max-reconnect-delay":"1s",
@@ -458,11 +458,11 @@ func (s *server) RestartNode(ctx context.Context, req *rpcpb.RestartNodeRequest)
 	"log-level":"INFO",
 	"log-dir":"%s",
 	"db-dir":"%s",
-	"whitelisted-subnets":"%s"
+	"whitelisted-allychains":"%s"
 }`,
 		nodeInfo.LogDir,
 		nodeInfo.DbDir,
-		nodeInfo.WhitelistedSubnets,
+		nodeInfo.WhitelistedAllychains,
 	)
 	nodeConfig.ImplSpecificConfig = json.RawMessage(fmt.Sprintf(`{"binaryPath":"%s","redirectStdout":true,"redirectStderr":true}`, nodeInfo.ExecPath))
 

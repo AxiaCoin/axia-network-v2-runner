@@ -55,7 +55,7 @@ func NewCommand() *cobra.Command {
 
 var (
 	axiaGoBinPath string
-	whitelistedSubnets string
+	whitelistedAllychains string
 )
 
 func newStartCommand() *cobra.Command {
@@ -71,10 +71,10 @@ func newStartCommand() *cobra.Command {
 		"axia binary path",
 	)
 	cmd.PersistentFlags().StringVar(
-		&whitelistedSubnets,
-		"whitelisted-subnets",
+		&whitelistedAllychains,
+		"whitelisted-allychains",
 		"",
-		"whitelisted subnets (comma-separated)",
+		"whitelisted allychains (comma-separated)",
 	)
 	return cmd
 }
@@ -91,7 +91,7 @@ func startFunc(cmd *cobra.Command, args []string) error {
 	defer cli.Close()
 
 	ctx, cancel := context.WithTimeout(context.Background(), requestTimeout)
-	info, err := cli.Start(ctx, axiaGoBinPath, client.WithWhitelistedSubnets(whitelistedSubnets))
+	info, err := cli.Start(ctx, axiaGoBinPath, client.WithWhitelistedAllychains(whitelistedAllychains))
 	cancel()
 	if err != nil {
 		return err
@@ -303,10 +303,10 @@ func newRestartNodeCommand() *cobra.Command {
 		"axia binary path",
 	)
 	cmd.PersistentFlags().StringVar(
-		&whitelistedSubnets,
-		"whitelisted-subnets",
+		&whitelistedAllychains,
+		"whitelisted-allychains",
 		"",
-		"whitelisted subnets (comma-separated)",
+		"whitelisted allychains (comma-separated)",
 	)
 	return cmd
 }
@@ -323,7 +323,7 @@ func restartNodeFunc(cmd *cobra.Command, args []string) error {
 	defer cli.Close()
 
 	ctx, cancel := context.WithTimeout(context.Background(), requestTimeout)
-	info, err := cli.RestartNode(ctx, nodeName, axiaGoBinPath, client.WithWhitelistedSubnets(whitelistedSubnets))
+	info, err := cli.RestartNode(ctx, nodeName, axiaGoBinPath, client.WithWhitelistedAllychains(whitelistedAllychains))
 	cancel()
 	if err != nil {
 		return err
