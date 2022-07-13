@@ -15,7 +15,7 @@ import (
 // Issues API calls to a node
 // TODO: byzantine api. check if appropiate. improve implementation.
 type Client interface {
-	PChainAPI() platformvm.Client
+	CoreChainAPI() platformvm.Client
 	XChainAPI() avm.Client
 	XChainWalletAPI() avm.WalletClient
 	CChainAPI() evm.Client
@@ -25,7 +25,7 @@ type Client interface {
 	IpcsAPI() ipcs.Client
 	KeystoreAPI() keystore.Client
 	AdminAPI() admin.Client
-	PChainIndexAPI() indexer.Client
+	CoreChainIndexAPI() indexer.Client
 	CChainIndexAPI() indexer.Client
 	// TODO add methods
 }

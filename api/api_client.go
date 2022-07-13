@@ -58,7 +58,7 @@ func NewAPIClient(ipAddr string, port uint16) Client {
 	}
 }
 
-func (c APIClient) PChainAPI() platformvm.Client {
+func (c APIClient) CoreChainAPI() platformvm.Client {
 	return c.platform
 }
 
@@ -98,7 +98,7 @@ func (c APIClient) AdminAPI() admin.Client {
 	return c.admin
 }
 
-func (c APIClient) PChainIndexAPI() indexer.Client {
+func (c APIClient) CoreChainIndexAPI() indexer.Client {
 	return c.pindex
 }
 

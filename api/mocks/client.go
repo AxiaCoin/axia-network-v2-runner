@@ -158,8 +158,8 @@ func (_m *Client) KeystoreAPI() keystore.Client {
 	return r0
 }
 
-// PChainAPI provides a mock function with given fields:
-func (_m *Client) PChainAPI() platformvm.Client {
+// CoreChainAPI provides a mock function with given fields:
+func (_m *Client) CoreChainAPI() platformvm.Client {
 	ret := _m.Called()
 
 	var r0 platformvm.Client
@@ -174,8 +174,8 @@ func (_m *Client) PChainAPI() platformvm.Client {
 	return r0
 }
 
-// PChainIndexAPI provides a mock function with given fields:
-func (_m *Client) PChainIndexAPI() indexer.Client {
+// CoreChainIndexAPI provides a mock function with given fields:
+func (_m *Client) CoreChainIndexAPI() indexer.Client {
 	ret := _m.Called()
 
 	var r0 indexer.Client
