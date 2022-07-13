@@ -206,16 +206,16 @@ func (_m *Client) SwapChainAPI() avm.Client {
 	return r0
 }
 
-// SwapChainWalletAPI provides a mock function with given fields:
-func (_m *Client) SwapChainWalletAPI() avm.WalletClient {
+// SwapChainAxiaWalletAPI provides a mock function with given fields:
+func (_m *Client) SwapChainAxiaWalletAPI() avm.AxiaWalletClient {
 	ret := _m.Called()
 
-	var r0 avm.WalletClient
-	if rf, ok := ret.Get(0).(func() avm.WalletClient); ok {
+	var r0 avm.AxiaWalletClient
+	if rf, ok := ret.Get(0).(func() avm.AxiaWalletClient); ok {
 		r0 = rf()
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(avm.WalletClient)
+			r0 = ret.Get(0).(avm.AxiaWalletClient)
 		}
 	}
 

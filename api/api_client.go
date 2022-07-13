@@ -24,7 +24,7 @@ var (
 type APIClient struct {
 	platform     platformvm.Client
 	swapChain       avm.Client
-	swapChainWallet avm.WalletClient
+	swapChainAxiaWallet avm.AxiaWalletClient
 	axChain       evm.Client
 	axChainEth    EthClient
 	info         info.Client
@@ -45,7 +45,7 @@ func NewAPIClient(ipAddr string, port uint16) Client {
 	return &APIClient{
 		platform:     platformvm.NewClient(uri),
 		swapChain:       avm.NewClient(uri, "Swap"),
-		swapChainWallet: avm.NewWalletClient(uri, "Swap"),
+		swapChainAxiaWallet: avm.NewAxiaWalletClient(uri, "Swap"),
 		axChain:       evm.NewAXChainClient(uri),
 		axChainEth:    NewEthClient(ipAddr, uint(port)), // wrapper over ethclient.Client
 		info:         info.NewClient(uri),
@@ -66,8 +66,8 @@ func (c APIClient) SwapChainAPI() avm.Client {
 	return c.swapChain
 }
 
-func (c APIClient) SwapChainWalletAPI() avm.WalletClient {
-	return c.swapChainWallet
+func (c APIClient) SwapChainAxiaWalletAPI() avm.AxiaWalletClient {
+	return c.swapChainAxiaWallet
 }
 
 func (c APIClient) AXChainAPI() evm.Client {
