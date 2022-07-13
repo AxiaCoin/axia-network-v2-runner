@@ -46,8 +46,8 @@ func (_m *Client) AdminAPI() admin.Client {
 	return r0
 }
 
-// CChainAPI provides a mock function with given fields:
-func (_m *Client) CChainAPI() evm.Client {
+// AXChainAPI provides a mock function with given fields:
+func (_m *Client) AXChainAPI() evm.Client {
 	ret := _m.Called()
 
 	var r0 evm.Client
@@ -62,8 +62,8 @@ func (_m *Client) CChainAPI() evm.Client {
 	return r0
 }
 
-// CChainEthAPI provides a mock function with given fields:
-func (_m *Client) CChainEthAPI() api.EthClient {
+// AXChainEthAPI provides a mock function with given fields:
+func (_m *Client) AXChainEthAPI() api.EthClient {
 	ret := _m.Called()
 
 	var r0 api.EthClient
@@ -78,8 +78,8 @@ func (_m *Client) CChainEthAPI() api.EthClient {
 	return r0
 }
 
-// CChainIndexAPI provides a mock function with given fields:
-func (_m *Client) CChainIndexAPI() indexer.Client {
+// AXChainIndexAPI provides a mock function with given fields:
+func (_m *Client) AXChainIndexAPI() indexer.Client {
 	ret := _m.Called()
 
 	var r0 indexer.Client

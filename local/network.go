@@ -48,7 +48,7 @@ var (
 		config.BootstrapIDsKey: {},
 	}
 	chainConfigSubDir  = "chainConfigs"
-	cChainConfigSubDir = filepath.Join(chainConfigSubDir, "AX")
+	axChainConfigSubDir = filepath.Join(chainConfigSubDir, "AX")
 )
 
 // network keeps information uses for network management, and accessing all the nodes
@@ -125,11 +125,11 @@ func init() {
 		if err != nil {
 			panic(err)
 		}
-		cChainConfig, err := fs.ReadFile(configsDir, fmt.Sprintf("node%d/cchain_config.json", i))
+		axChainConfig, err := fs.ReadFile(configsDir, fmt.Sprintf("node%d/axchain_config.json", i))
 		if err != nil {
 			panic(err)
 		}
-		defaultNetworkConfig.NodeConfigs[i].CChainConfigFile = string(cChainConfig)
+		defaultNetworkConfig.NodeConfigs[i].AXChainConfigFile = string(axChainConfig)
 		defaultNetworkConfig.NodeConfigs[i].StakingCert = string(stakingCert)
 		defaultNetworkConfig.NodeConfigs[i].IsBeacon = true
 	}
@@ -284,8 +284,8 @@ func newNetwork(
 // Core-Chain Address 1 Key: PrivateKey-ewoqjP7PxY4yr3iLTpLisriqt94hdyDFNgchSxGGztUrTXtNN
 // Core-Chain Address 2:     P-custom16045mxr3s2cjycqe2xfluk304xv3ezhkhsvkpr
 // Core-Chain Address 2 Key: PrivateKey-2fzYBh3bbWemKxQmMfX6DSuL2BFmDSLQWTvma57xwjQjtf8gFq
-// C-Chain Address:       0x8db97C7cEcE249c2b98bDC0226Cc4C2A57BF52FC
-// C-Chain Address Key:   56289e99c94b6912bfc12adc093c9b51124f0dc54ac7a766b2bc5ccf558d8027
+// AX-Chain Address:       0x8db97C7cEcE249c2b98bDC0226Cc4C2A57BF52FC
+// AX-Chain Address Key:   56289e99c94b6912bfc12adc093c9b51124f0dc54ac7a766b2bc5ccf558d8027
 // The following nodes are validators:
 // * NodeID-7Xhw2mDxuDS44j42TCB6U5579esbSt3Lg
 // * NodeID-MFrZFVCXPv5iCn6M9K6XduxGTYp891xXZ
@@ -566,9 +566,9 @@ func (ln *localNetwork) removeNode(nodeName string) error {
 	_ = ln.bootstraps.RemoveByID(node.nodeID)
 
 	delete(ln.nodes, nodeName)
-	// cchain eth api uses a websocket connection and must be closed before stopping the node,
+	// axchain eth api uses a websocket connection and must be closed before stopping the node,
 	// to avoid errors logs at client
-	node.client.CChainEthAPI().Close()
+	node.client.AXChainEthAPI().Close()
 	if err := node.process.Stop(); err != nil {
 		return fmt.Errorf("error sending SIGTERM to node %s: %w", nodeName, err)
 	}
@@ -642,7 +642,7 @@ func makeNodeDir(log logging.Logger, rootDir, nodeName string) (string, error) {
 	if rootDir == "" {
 		log.Warn("no network root directory defined; will create this node's runtime directory in working directory")
 	}
-	// [nodeRootDir] is where this node's config file, C-Chain config file,
+	// [nodeRootDir] is where this node's config file, AX-Chain config file,
 	// staking key, staking certificate and genesis file will be written.
 	// (Other file locations are given in the node's config file.)
 	// TODO should we do this for other directories? Profiles?
@@ -810,12 +810,12 @@ func writeFiles(genesis []byte, nodeRootDir string, nodeConfig *node.Config) ([]
 			contents:  []byte(nodeConfig.ConfigFile),
 		})
 	}
-	if len(nodeConfig.CChainConfigFile) != 0 {
+	if len(nodeConfig.AXChainConfigFile) != 0 {
 		files = append(files, file{
 			flagValue: filepath.Join(nodeRootDir, chainConfigSubDir),
-			path:      filepath.Join(nodeRootDir, cChainConfigSubDir, configFileName),
+			path:      filepath.Join(nodeRootDir, axChainConfigSubDir, configFileName),
 			pathKey:   config.ChainConfigDirKey,
-			contents:  []byte(nodeConfig.CChainConfigFile),
+			contents:  []byte(nodeConfig.AXChainConfigFile),
 		})
 	}
 	flags := []string{}

@@ -41,7 +41,7 @@ type Config struct {
 	// May be nil.
 	ConfigFile []byte
 	// May be nil.
-	CChainConfigFile []byte
+	AXChainConfigFile []byte
 }
 ```
 
@@ -60,15 +60,15 @@ You can create a custom AvalancheGo genesis with function `network.NewAvalancheG
 ```go
 // Return a genesis JSON where:
 // The nodes in [genesisVdrs] are validators.
-// The C-Chain and Swap-Chain balances are given by
-// [cChainBalances] and [swapChainBalances].
+// The AX-Chain and Swap-Chain balances are given by
+// [axChainBalances] and [swapChainBalances].
 // Note that many of the genesis fields (i.e. reward addresses)
 // are randomly generated or hard-coded.
 func NewAvalancheGoGenesis(
 	log logging.Logger,
 	networkID uint32,
 	swapChainBalances []AddrAndBalance,
-	cChainBalances []AddrAndBalance,
+	axChainBalances []AddrAndBalance,
 	genesisVdrs []ids.ShortID,
 ) ([]byte, error)
 ```
@@ -118,8 +118,8 @@ This allows users to create a new network without needing to define any configur
 // Core-Chain Address 1 Key: PrivateKey-ewoqjP7PxY4yr3iLTpLisriqt94hdyDFNgchSxGGztUrTXtNN
 // Core-Chain Address 2:     P-custom16045mxr3s2cjycqe2xfluk304xv3ezhkhsvkpr
 // Core-Chain Address 2 Key: PrivateKey-2fzYBh3bbWemKxQmMfX6DSuL2BFmDSLQWTvma57xwjQjtf8gFq
-// C-Chain Address:       0x8db97C7cEcE249c2b98bDC0226Cc4C2A57BF52FC
-// C-Chain Address Key:   56289e99c94b6912bfc12adc093c9b51124f0dc54ac7a766b2bc5ccf558d8027
+// AX-Chain Address:       0x8db97C7cEcE249c2b98bDC0226Cc4C2A57BF52FC
+// AX-Chain Address Key:   56289e99c94b6912bfc12adc093c9b51124f0dc54ac7a766b2bc5ccf558d8027
 // The following nodes are validators:
 // * NodeID-7Xhw2mDxuDS44j42TCB6U5579esbSt3Lg
 // * NodeID-MFrZFVCXPv5iCn6M9K6XduxGTYp891xXZ

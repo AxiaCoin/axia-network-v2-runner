@@ -18,14 +18,14 @@ type Client interface {
 	CoreChainAPI() platformvm.Client
 	SwapChainAPI() avm.Client
 	SwapChainWalletAPI() avm.WalletClient
-	CChainAPI() evm.Client
-	CChainEthAPI() EthClient // ethclient websocket wrapper that adds mutexed calls, and lazy conn init (on first call)
+	AXChainAPI() evm.Client
+	AXChainEthAPI() EthClient // ethclient websocket wrapper that adds mutexed calls, and lazy conn init (on first call)
 	InfoAPI() info.Client
 	HealthAPI() health.Client
 	IpcsAPI() ipcs.Client
 	KeystoreAPI() keystore.Client
 	AdminAPI() admin.Client
 	CoreChainIndexAPI() indexer.Client
-	CChainIndexAPI() indexer.Client
+	AXChainIndexAPI() indexer.Client
 	// TODO add methods
 }
