@@ -48,7 +48,7 @@ var (
 		config.BootstrapIDsKey: {},
 	}
 	chainConfigSubDir  = "chainConfigs"
-	cChainConfigSubDir = filepath.Join(chainConfigSubDir, "C")
+	cChainConfigSubDir = filepath.Join(chainConfigSubDir, "AX")
 )
 
 // network keeps information uses for network management, and accessing all the nodes

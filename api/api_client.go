@@ -44,8 +44,8 @@ func NewAPIClient(ipAddr string, port uint16) Client {
 	uri := fmt.Sprintf("http://%s:%d", ipAddr, port)
 	return &APIClient{
 		platform:     platformvm.NewClient(uri),
-		xChain:       avm.NewClient(uri, "X"),
-		xChainWallet: avm.NewWalletClient(uri, "X"),
+		xChain:       avm.NewClient(uri, "Swap"),
+		xChainWallet: avm.NewWalletClient(uri, "Swap"),
 		cChain:       evm.NewCChainClient(uri),
 		cChainEth:    NewEthClient(ipAddr, uint(port)), // wrapper over ethclient.Client
 		info:         info.NewClient(uri),

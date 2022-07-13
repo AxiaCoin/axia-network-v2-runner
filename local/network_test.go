@@ -1102,7 +1102,7 @@ func TestWriteFiles(t *testing.T) {
 	configFilePath := filepath.Join(tmpDir, configFileName)
 	configFileFlag := fmt.Sprintf("--%s=%v", config.ConfigFileKey, configFilePath)
 	chainConfigDir := filepath.Join(tmpDir, chainConfigSubDir)
-	cChainConfigPath := filepath.Join(tmpDir, chainConfigSubDir, "C", configFileName)
+	cChainConfigPath := filepath.Join(tmpDir, chainConfigSubDir, "AX", configFileName)
 	chainConfigDirFlag := fmt.Sprintf("--%s=%v", config.ChainConfigDirKey, chainConfigDir)
 
 	type test struct {

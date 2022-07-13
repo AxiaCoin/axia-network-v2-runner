@@ -154,7 +154,7 @@ func NewAvalancheGoGenesis(
 	}
 
 	// Address that controls stake doesn't matter -- generate it randomly
-	genesisVdrStakeAddr, _ := formatting.FormatAddress("X", constants.GetHRP(networkID), ids.GenerateTestShortID().Bytes())
+	genesisVdrStakeAddr, _ := formatting.FormatAddress("Swap", constants.GetHRP(networkID), ids.GenerateTestShortID().Bytes())
 	config := genesis.UnparsedConfig{
 		NetworkID: networkID,
 		Allocations: []genesis.UnparsedAllocation{
@@ -177,7 +177,7 @@ func NewAvalancheGoGenesis(
 	}
 
 	for _, xChainBal := range xChainBalances {
-		xChainAddr, _ := formatting.FormatAddress("X", constants.GetHRP(networkID), xChainBal.Addr[:])
+		xChainAddr, _ := formatting.FormatAddress("Swap", constants.GetHRP(networkID), xChainBal.Addr[:])
 		config.Allocations = append(
 			config.Allocations,
 			genesis.UnparsedAllocation{
@@ -209,7 +209,7 @@ func NewAvalancheGoGenesis(
 
 	// Set initial validators.
 	// Give staking rewards to random address.
-	rewardAddr, _ := formatting.FormatAddress("X", constants.GetHRP(networkID), ids.GenerateTestShortID().Bytes())
+	rewardAddr, _ := formatting.FormatAddress("Swap", constants.GetHRP(networkID), ids.GenerateTestShortID().Bytes())
 	for _, genesisVdr := range genesisVdrs {
 		config.InitialStakers = append(
 			config.InitialStakers,
