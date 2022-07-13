@@ -28,7 +28,7 @@ Therefore it is very important to distinguish between:
 ## Cloud-based environment
 
 ### Github action
-If running in a cloud provided (for Ava Labs, typically AWS), then the **devops** team is responsible for setting up the required infrastructure.
+If running in a cloud provided (for Axia Systems, typically AWS), then the **devops** team is responsible for setting up the required infrastructure.
 
 **Devops would be deploying the `axia-operator`**.
 
