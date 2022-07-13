@@ -12,7 +12,7 @@ var genesis = []byte(
 		"allocations": [
 		  {
 			"ethAddr": "0xb3d82b1367d362de99ab59a658165aff520cbd4d",
-			"axcAddr": "X-custom1g65uqn6t77p656w64023nh8nd9updzmxwd59gh",
+			"axcAddr": "Swap-custom1g65uqn6t77p656w64023nh8nd9updzmxwd59gh",
 			"initialAmount": 0,
 			"unlockSchedule": [
 			  {
@@ -26,12 +26,12 @@ var genesis = []byte(
 		"initialStakeDuration": 31536000,
 		"initialStakeDurationOffset": 5400,
 		"initialStakedFunds": [
-		  "X-custom1g65uqn6t77p656w64023nh8nd9updzmxwd59gh"
+		  "Swap-custom1g65uqn6t77p656w64023nh8nd9updzmxwd59gh"
 		],
 		"initialStakers": [
 		  {
 			"nodeID": "NodeID-7Xhw2mDxuDS44j42TCB6U5579esbSt3Lg",
-			"rewardAddress": "X-custom18jma8ppw3nhx5r4ap8clazz0dps7rv5u9xde7p",
+			"rewardAddress": "Swap-custom18jma8ppw3nhx5r4ap8clazz0dps7rv5u9xde7p",
 			"delegationFee": 1000000
 		  }
 		],

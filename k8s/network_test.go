@@ -40,7 +40,7 @@ var (
 			"allocations": [
 			  {
 				"ethAddr": "0xb3d82b1367d362de99ab59a658165aff520cbd4d",
-				"axcAddr": "X-local1g65uqn6t77p656w64023nh8nd9updzmxyymev2",
+				"axcAddr": "Swap-local1g65uqn6t77p656w64023nh8nd9updzmxyymev2",
 				"initialAmount": 0,
 				"unlockSchedule": [
 				  {
@@ -51,7 +51,7 @@ var (
 			  },
 			  {
 				"ethAddr": "0xb3d82b1367d362de99ab59a658165aff520cbd4d",
-				"axcAddr": "X-custom18jma8ppw3nhx5r4ap8clazz0dps7rv5u9xde7p",
+				"axcAddr": "Swap-custom18jma8ppw3nhx5r4ap8clazz0dps7rv5u9xde7p",
 				"initialAmount": 300000000000000000,
 				"unlockSchedule": [
 				  {
@@ -65,7 +65,7 @@ var (
 			  },
 			  {
 				"ethAddr": "0xb3d82b1367d362de99ab59a658165aff520cbd4d",
-				"axcAddr": "X-custom1ur873jhz9qnaqv5qthk5sn3e8nj3e0kmzpjrhp",
+				"axcAddr": "Swap-custom1ur873jhz9qnaqv5qthk5sn3e8nj3e0kmzpjrhp",
 				"initialAmount": 10000000000000000,
 				"unlockSchedule": [
 				  {
@@ -79,32 +79,32 @@ var (
 			"initialStakeDuration": 31536000,
 			"initialStakeDurationOffset": 5400,
 			"initialStakedFunds": [
-			  "X-custom1g65uqn6t77p656w64023nh8nd9updzmxwd59gh"
+			  "Swap-custom1g65uqn6t77p656w64023nh8nd9updzmxwd59gh"
 			],
 			"initialStakers": [
 			  {
 				"nodeID": "NodeID-7Xhw2mDxuDS44j42TCB6U5579esbSt3Lg",
-				"rewardAddress": "X-custom18jma8ppw3nhx5r4ap8clazz0dps7rv5u9xde7p",
+				"rewardAddress": "Swap-custom18jma8ppw3nhx5r4ap8clazz0dps7rv5u9xde7p",
 				"delegationFee": 1000000
 			  },
 			  {
 				"nodeID": "NodeID-MFrZFVCXPv5iCn6M9K6XduxGTYp891xXZ",
-				"rewardAddress": "X-custom18jma8ppw3nhx5r4ap8clazz0dps7rv5u9xde7p",
+				"rewardAddress": "Swap-custom18jma8ppw3nhx5r4ap8clazz0dps7rv5u9xde7p",
 				"delegationFee": 500000
 			  },
 			  {
 				"nodeID": "NodeID-NFBbbJ4qCmNaCzeW7sxErhvWqvEQMnYcN",
-				"rewardAddress": "X-custom18jma8ppw3nhx5r4ap8clazz0dps7rv5u9xde7p",
+				"rewardAddress": "Swap-custom18jma8ppw3nhx5r4ap8clazz0dps7rv5u9xde7p",
 				"delegationFee": 250000
 			  },
 			  {
 				"nodeID": "NodeID-GWPcbFJZFfZreETSoWjPimr846mXEKCtu",
-				"rewardAddress": "X-custom18jma8ppw3nhx5r4ap8clazz0dps7rv5u9xde7p",
+				"rewardAddress": "Swap-custom18jma8ppw3nhx5r4ap8clazz0dps7rv5u9xde7p",
 				"delegationFee": 125000
 			  },
 			  {
 				"nodeID": "NodeID-P7oB2McjBGgW2NXXWVYjV8JEDFoW9xDE5",
-				"rewardAddress": "X-custom18jma8ppw3nhx5r4ap8clazz0dps7rv5u9xde7p",
+				"rewardAddress": "Swap-custom18jma8ppw3nhx5r4ap8clazz0dps7rv5u9xde7p",
 				"delegationFee": 62500
 			  }
 			],
