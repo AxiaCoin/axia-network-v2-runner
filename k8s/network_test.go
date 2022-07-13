@@ -40,7 +40,7 @@ var (
 			"allocations": [
 			  {
 				"ethAddr": "0xb3d82b1367d362de99ab59a658165aff520cbd4d",
-				"avaxAddr": "X-local1g65uqn6t77p656w64023nh8nd9updzmxyymev2",
+				"axcAddr": "X-local1g65uqn6t77p656w64023nh8nd9updzmxyymev2",
 				"initialAmount": 0,
 				"unlockSchedule": [
 				  {
@@ -51,7 +51,7 @@ var (
 			  },
 			  {
 				"ethAddr": "0xb3d82b1367d362de99ab59a658165aff520cbd4d",
-				"avaxAddr": "X-custom18jma8ppw3nhx5r4ap8clazz0dps7rv5u9xde7p",
+				"axcAddr": "X-custom18jma8ppw3nhx5r4ap8clazz0dps7rv5u9xde7p",
 				"initialAmount": 300000000000000000,
 				"unlockSchedule": [
 				  {
@@ -65,7 +65,7 @@ var (
 			  },
 			  {
 				"ethAddr": "0xb3d82b1367d362de99ab59a658165aff520cbd4d",
-				"avaxAddr": "X-custom1ur873jhz9qnaqv5qthk5sn3e8nj3e0kmzpjrhp",
+				"axcAddr": "X-custom1ur873jhz9qnaqv5qthk5sn3e8nj3e0kmzpjrhp",
 				"initialAmount": 10000000000000000,
 				"unlockSchedule": [
 				  {
@@ -254,7 +254,7 @@ func TestNetworkDefault(t *testing.T) {
 		StakingKey:  string(stakingKey),
 		StakingCert: string(stakingCert),
 		ImplSpecificConfig: utils.NewK8sNodeConfigJsonRaw(
-			"chain.avax.network/v1alpha1",
+			"chain.axc.network/v1alpha1",
 			"new-node",
 			"avaplatform/axia",
 			"Axia",

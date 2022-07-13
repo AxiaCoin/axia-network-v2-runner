@@ -8,7 +8,7 @@
       "namespace": "ci-axia",
       "identifier": "axia-test-validator-0",
       "kind": "Axia",
-      "apiVersion": "chain.avax.network/v1alpha1",
+      "apiVersion": "chain.axc.network/v1alpha1",
       "image": "avaplatform/axia",
       "tag": "v1.6.4"
     },
@@ -16,7 +16,7 @@
       "namespace": "ci-axia",
       "identifier": "axia-test-validator-1",
       "kind": "Axia",
-      "apiVersion": "chain.avax.network/v1alpha1",
+      "apiVersion": "chain.axc.network/v1alpha1",
       "image": "avaplatform/axia",
       "tag": "v1.6.4"
     },
@@ -24,7 +24,7 @@
       "namespace": "ci-axia",
       "identifier": "axia-test-validator-2",
       "kind": "Axia",
-      "apiVersion": "chain.avax.network/v1alpha1",
+      "apiVersion": "chain.axc.network/v1alpha1",
       "image": "avaplatform/axia",
       "tag": "v1.6.4"
     },
@@ -32,7 +32,7 @@
       "namespace": "ci-axia",
       "identifier": "axia-test-validator-3",
       "kind": "Axia",
-      "apiVersion": "chain.avax.network/v1alpha1",
+      "apiVersion": "chain.axc.network/v1alpha1",
       "image": "avaplatform/axia",
       "tag": "v1.6.4"
     },
@@ -40,7 +40,7 @@
       "namespace": "ci-axia",
       "identifier": "axia-test-validator-4",
       "kind": "Axia",
-      "apiVersion": "chain.avax.network/v1alpha1",
+      "apiVersion": "chain.axc.network/v1alpha1",
       "image": "avaplatform/axia",
       "tag": "v1.6.4"
     }
