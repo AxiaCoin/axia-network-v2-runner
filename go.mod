@@ -3,7 +3,9 @@ module github.com/axiacoin/axia-network-v2-runner
 go 1.17
 
 require (
-	github.com/ava-labs/axia-operator v0.0.0-20211115144351-99f07d2570bf
+	github.com/ava-labs/avalanchego-operator v0.0.0-20211115144351-99f07d2570bf
+	github.com/axiacoin/axia-network-v2 v0.0.0-20220705131353-cd8e09ac049f
+	github.com/axiacoin/axia-network-v2-coreth v0.0.0-20220705131545-929b4c93c5f6
 	github.com/ethereum/go-ethereum v1.10.16
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.7.2
 	github.com/onsi/ginkgo/v2 v2.1.0
@@ -25,8 +27,6 @@ require (
 	github.com/NYTimes/gziphandler v1.1.1 // indirect
 	github.com/StackExchange/wmi v0.0.0-20180116203802-5d049714c4a6 // indirect
 	github.com/VictoriaMetrics/fastcache v1.9.0 // indirect
-	github.com/axiacoin/axia-network-v2 v0.0.0-20220705131353-cd8e09ac049f // indirect
-	github.com/axiacoin/axia-network-v2-coreth v0.0.0-20220705131545-929b4c93c5f6 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/btcsuite/btcd v0.21.0-beta // indirect
 	github.com/btcsuite/btcutil v1.0.2 // indirect
@@ -46,6 +46,7 @@ require (
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang-jwt/jwt v3.2.1+incompatible // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
+	github.com/golang/mock v1.6.0 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/google/go-cmp v0.5.6 // indirect
@@ -56,6 +57,7 @@ require (
 	github.com/gorilla/mux v1.8.0 // indirect
 	github.com/gorilla/rpc v1.2.0 // indirect
 	github.com/gorilla/websocket v1.4.2 // indirect
+	github.com/grpc-ecosystem/go-grpc-prometheus v1.2.0 // indirect
 	github.com/hashicorp/go-bexpr v0.1.10 // indirect
 	github.com/hashicorp/go-hclog v1.0.0 // indirect
 	github.com/hashicorp/go-plugin v1.4.3 // indirect

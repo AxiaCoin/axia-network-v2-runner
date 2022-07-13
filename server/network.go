@@ -49,16 +49,16 @@ type localNetwork struct {
 }
 
 func newNetwork(execPath string, rootDataDir string, whitelistedAllychains string, logLevel string) (*localNetwork, error) {
-	lcfg, err := logging.DefaultConfig()
-	if err != nil {
-		return nil, err
-	}
+	lcfg := logging.DefaultConfig
+	// if err != nil {
+	// 	return nil, err
+	// }
 	lcfg.Directory = rootDataDir
 	logFactory := logging.NewFactory(lcfg)
-	logger, err := logFactory.Make("main")
-	if err != nil {
-		return nil, err
-	}
+	logger, _ := logFactory.Make("main")
+	// if err != nil {
+	// 	return nil, err
+	// }
 
 	if logLevel == "" {
 		logLevel = "INFO"
@@ -99,14 +99,14 @@ func newNetwork(execPath string, rootDataDir string, whitelistedAllychains strin
 		cfg.NodeConfigs[i].ImplSpecificConfig = json.RawMessage(fmt.Sprintf(`{"binaryPath":"%s","redirectStdout":true,"redirectStderr":true}`, execPath))
 
 		nodeInfos[nodeName] = &rpcpb.NodeInfo{
-			Name:               nodeName,
-			ExecPath:           execPath,
-			Uri:                "",
-			Id:                 "",
-			LogDir:             logDir,
-			DbDir:              dbDir,
+			Name:                  nodeName,
+			ExecPath:              execPath,
+			Uri:                   "",
+			Id:                    "",
+			LogDir:                logDir,
+			DbDir:                 dbDir,
 			WhitelistedAllychains: whitelistedAllychains,
-			Config:             []byte(cfg.NodeConfigs[i].ConfigFile),
+			Config:                []byte(cfg.NodeConfigs[i].ConfigFile),
 		}
 	}
 

@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"strings"
 
-	k8sapi "github.com/ava-labs/axia-operator/api/v1alpha1"
+	k8sapi "github.com/ava-labs/avalanchego-operator/api/v1alpha1"
 	"github.com/axiacoin/axia-network-v2-runner/network/node"
 	"github.com/axiacoin/axia-network-v2-runner/utils"
 	"github.com/axiacoin/axia-network-v2/config"

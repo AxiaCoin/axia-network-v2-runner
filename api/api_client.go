@@ -3,6 +3,7 @@ package api
 import (
 	"fmt"
 
+	"github.com/axiacoin/axia-network-v2-coreth/plugin/evm"
 	"github.com/axiacoin/axia-network-v2/api/admin"
 	"github.com/axiacoin/axia-network-v2/api/health"
 	"github.com/axiacoin/axia-network-v2/api/info"
@@ -11,7 +12,6 @@ import (
 	"github.com/axiacoin/axia-network-v2/indexer"
 	"github.com/axiacoin/axia-network-v2/vms/avm"
 	"github.com/axiacoin/axia-network-v2/vms/platformvm"
-	"github.com/axiacoin/axia-network-v2-coreth/plugin/evm"
 )
 
 // interface compliance
@@ -22,18 +22,18 @@ var (
 
 // APIClient gives access to most axia apis (or suitable wrappers)
 type APIClient struct {
-	platform     platformvm.Client
-	swapChain       avm.Client
+	platform            platformvm.Client
+	swapChain           avm.Client
 	swapChainAxiaWallet avm.AxiaWalletClient
-	axChain       evm.Client
-	axChainEth    EthClient
-	info         info.Client
-	health       health.Client
-	ipcs         ipcs.Client
-	keystore     keystore.Client
-	admin        admin.Client
-	pindex       indexer.Client
-	cindex       indexer.Client
+	axChain             evm.Client
+	axChainEth          EthClient
+	info                info.Client
+	health              health.Client
+	ipcs                ipcs.Client
+	keystore            keystore.Client
+	admin               admin.Client
+	pindex              indexer.Client
+	cindex              indexer.Client
 }
 
 // Returns a new API client for a node at [ipAddr]:[port].
@@ -43,18 +43,18 @@ type NewAPIClientF func(ipAddr string, port uint16) Client
 func NewAPIClient(ipAddr string, port uint16) Client {
 	uri := fmt.Sprintf("http://%s:%d", ipAddr, port)
 	return &APIClient{
-		platform:     platformvm.NewClient(uri),
-		swapChain:       avm.NewClient(uri, "Swap"),
+		platform:            platformvm.NewClient(uri),
+		swapChain:           avm.NewClient(uri, "Swap"),
 		swapChainAxiaWallet: avm.NewAxiaWalletClient(uri, "Swap"),
-		axChain:       evm.NewAXChainClient(uri),
-		axChainEth:    NewEthClient(ipAddr, uint(port)), // wrapper over ethclient.Client
-		info:         info.NewClient(uri),
-		health:       health.NewClient(uri),
-		ipcs:         ipcs.NewClient(uri),
-		keystore:     keystore.NewClient(uri),
-		admin:        admin.NewClient(uri),
-		pindex:       indexer.NewClient(uri, "/ext/index/P/block"),
-		cindex:       indexer.NewClient(uri, "/ext/index/C/block"),
+		axChain:             evm.NewAXChainClient(uri),
+		axChainEth:          NewEthClient(ipAddr, uint(port)), // wrapper over ethclient.Client
+		info:                info.NewClient(uri),
+		health:              health.NewClient(uri),
+		ipcs:                ipcs.NewClient(uri),
+		keystore:            keystore.NewClient(uri),
+		admin:               admin.NewClient(uri),
+		pindex:              indexer.NewClient(uri, "/ext/index/Core/block"),
+		cindex:              indexer.NewClient(uri, "/ext/index/AX/block"),
 	}
 }
 

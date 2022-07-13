@@ -6,10 +6,10 @@ import (
 	"math/big"
 	"sync"
 
-	"github.com/axiacoin/axia-network-v2/ids"
 	"github.com/axiacoin/axia-network-v2-coreth/core/types"
 	"github.com/axiacoin/axia-network-v2-coreth/ethclient"
 	"github.com/axiacoin/axia-network-v2-coreth/interfaces"
+	"github.com/axiacoin/axia-network-v2/ids"
 	"github.com/ethereum/go-ethereum/common"
 )
 
@@ -61,7 +61,7 @@ func NewEthClient(ipAddr string, port uint) EthClient {
 // connect attempts to connect with websocket ethclient API
 func (c *ethClient) connect() error {
 	if c.client == nil {
-		client, err := ethclient.Dial(fmt.Sprintf("ws://%s:%d/ext/bc/C/ws", c.ipAddr, c.port))
+		client, err := ethclient.Dial(fmt.Sprintf("ws://%s:%d/ext/bc/AX/ws", c.ipAddr, c.port))
 		if err != nil {
 			return err
 		}

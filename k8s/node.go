@@ -1,7 +1,7 @@
 package k8s
 
 import (
-	k8sapi "github.com/ava-labs/axia-operator/api/v1alpha1"
+	k8sapi "github.com/ava-labs/avalanchego-operator/api/v1alpha1"
 	"github.com/axiacoin/axia-network-v2-runner/api"
 	"github.com/axiacoin/axia-network-v2-runner/network/node"
 	"github.com/axiacoin/axia-network-v2/ids"

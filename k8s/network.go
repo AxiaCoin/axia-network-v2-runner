@@ -16,7 +16,7 @@ import (
 	"github.com/axiacoin/axia-network-v2/utils/logging"
 	"golang.org/x/sync/errgroup"
 
-	k8sapi "github.com/ava-labs/axia-operator/api/v1alpha1"
+	k8sapi "github.com/ava-labs/avalanchego-operator/api/v1alpha1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
 	ctrl "sigs.k8s.io/controller-runtime"
