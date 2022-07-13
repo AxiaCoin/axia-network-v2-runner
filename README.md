@@ -60,14 +60,14 @@ You can create a custom AvalancheGo genesis with function `network.NewAvalancheG
 ```go
 // Return a genesis JSON where:
 // The nodes in [genesisVdrs] are validators.
-// The C-Chain and X-Chain balances are given by
-// [cChainBalances] and [xChainBalances].
+// The C-Chain and Swap-Chain balances are given by
+// [cChainBalances] and [swapChainBalances].
 // Note that many of the genesis fields (i.e. reward addresses)
 // are randomly generated or hard-coded.
 func NewAvalancheGoGenesis(
 	log logging.Logger,
 	networkID uint32,
-	xChainBalances []AddrAndBalance,
+	swapChainBalances []AddrAndBalance,
 	cChainBalances []AddrAndBalance,
 	genesisVdrs []ids.ShortID,
 ) ([]byte, error)
@@ -110,10 +110,10 @@ This allows users to create a new network without needing to define any configur
 // NewDefaultNetwork returns a new network using a pre-defined
 // network configuration.
 // The following addresses are pre-funded:
-// X-Chain Address 1:     X-custom18jma8ppw3nhx5r4ap8clazz0dps7rv5u9xde7p
-// X-Chain Address 1 Key: PrivateKey-ewoqjP7PxY4yr3iLTpLisriqt94hdyDFNgchSxGGztUrTXtNN
-// X-Chain Address 2:     X-custom16045mxr3s2cjycqe2xfluk304xv3ezhkhsvkpr
-// X-Chain Address 2 Key: PrivateKey-2fzYBh3bbWemKxQmMfX6DSuL2BFmDSLQWTvma57xwjQjtf8gFq
+// Swap-Chain Address 1:     X-custom18jma8ppw3nhx5r4ap8clazz0dps7rv5u9xde7p
+// Swap-Chain Address 1 Key: PrivateKey-ewoqjP7PxY4yr3iLTpLisriqt94hdyDFNgchSxGGztUrTXtNN
+// Swap-Chain Address 2:     X-custom16045mxr3s2cjycqe2xfluk304xv3ezhkhsvkpr
+// Swap-Chain Address 2 Key: PrivateKey-2fzYBh3bbWemKxQmMfX6DSuL2BFmDSLQWTvma57xwjQjtf8gFq
 // Core-Chain Address 1:     P-custom18jma8ppw3nhx5r4ap8clazz0dps7rv5u9xde7p
 // Core-Chain Address 1 Key: PrivateKey-ewoqjP7PxY4yr3iLTpLisriqt94hdyDFNgchSxGGztUrTXtNN
 // Core-Chain Address 2:     P-custom16045mxr3s2cjycqe2xfluk304xv3ezhkhsvkpr

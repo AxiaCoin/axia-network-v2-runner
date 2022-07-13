@@ -16,8 +16,8 @@ import (
 // TODO: byzantine api. check if appropiate. improve implementation.
 type Client interface {
 	CoreChainAPI() platformvm.Client
-	XChainAPI() avm.Client
-	XChainWalletAPI() avm.WalletClient
+	SwapChainAPI() avm.Client
+	SwapChainWalletAPI() avm.WalletClient
 	CChainAPI() evm.Client
 	CChainEthAPI() EthClient // ethclient websocket wrapper that adds mutexed calls, and lazy conn init (on first call)
 	InfoAPI() info.Client

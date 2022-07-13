@@ -190,8 +190,8 @@ func (_m *Client) CoreChainIndexAPI() indexer.Client {
 	return r0
 }
 
-// XChainAPI provides a mock function with given fields:
-func (_m *Client) XChainAPI() avm.Client {
+// SwapChainAPI provides a mock function with given fields:
+func (_m *Client) SwapChainAPI() avm.Client {
 	ret := _m.Called()
 
 	var r0 avm.Client
@@ -206,8 +206,8 @@ func (_m *Client) XChainAPI() avm.Client {
 	return r0
 }
 
-// XChainWalletAPI provides a mock function with given fields:
-func (_m *Client) XChainWalletAPI() avm.WalletClient {
+// SwapChainWalletAPI provides a mock function with given fields:
+func (_m *Client) SwapChainWalletAPI() avm.WalletClient {
 	ret := _m.Called()
 
 	var r0 avm.WalletClient

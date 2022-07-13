@@ -131,14 +131,14 @@ func (c *Config) Validate() error {
 
 // Return a genesis JSON where:
 // The nodes in [genesisVdrs] are validators.
-// The C-Chain and X-Chain balances are given by
-// [cChainBalances] and [xChainBalances].
+// The C-Chain and Swap-Chain balances are given by
+// [cChainBalances] and [swapChainBalances].
 // Note that many of the genesis fields (i.e. reward addresses)
 // are randomly generated or hard-coded.
 func NewAvalancheGoGenesis(
 	log logging.Logger,
 	networkID uint32,
-	xChainBalances []AddrAndBalance,
+	swapChainBalances []AddrAndBalance,
 	cChainBalances []AddrAndBalance,
 	genesisVdrs []ids.ShortID,
 ) ([]byte, error) {
@@ -149,7 +149,7 @@ func NewAvalancheGoGenesis(
 	switch {
 	case len(genesisVdrs) == 0:
 		return nil, errors.New("no genesis validators provided")
-	case len(xChainBalances)+len(cChainBalances) == 0:
+	case len(swapChainBalances)+len(cChainBalances) == 0:
 		return nil, errors.New("no genesis balances given")
 	}
 
@@ -176,14 +176,14 @@ func NewAvalancheGoGenesis(
 		Message:                    "hello world",
 	}
 
-	for _, xChainBal := range xChainBalances {
-		xChainAddr, _ := formatting.FormatAddress("Swap", constants.GetHRP(networkID), xChainBal.Addr[:])
+	for _, swapChainBal := range swapChainBalances {
+		swapChainAddr, _ := formatting.FormatAddress("Swap", constants.GetHRP(networkID), swapChainBal.Addr[:])
 		config.Allocations = append(
 			config.Allocations,
 			genesis.UnparsedAllocation{
 				ETHAddr:       "0x0000000000000000000000000000000000000000",
-				AVAXAddr:      xChainAddr,
-				InitialAmount: xChainBal.Balance,
+				AVAXAddr:      swapChainAddr,
+				InitialAmount: swapChainBal.Balance,
 				UnlockSchedule: []genesis.LockedAmount{
 					{
 						Amount:   validatorStake * uint64(len(genesisVdrs)), // Stake

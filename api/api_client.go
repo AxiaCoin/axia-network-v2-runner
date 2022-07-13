@@ -23,8 +23,8 @@ var (
 // APIClient gives access to most avalanchego apis (or suitable wrappers)
 type APIClient struct {
 	platform     platformvm.Client
-	xChain       avm.Client
-	xChainWallet avm.WalletClient
+	swapChain       avm.Client
+	swapChainWallet avm.WalletClient
 	cChain       evm.Client
 	cChainEth    EthClient
 	info         info.Client
@@ -44,8 +44,8 @@ func NewAPIClient(ipAddr string, port uint16) Client {
 	uri := fmt.Sprintf("http://%s:%d", ipAddr, port)
 	return &APIClient{
 		platform:     platformvm.NewClient(uri),
-		xChain:       avm.NewClient(uri, "Swap"),
-		xChainWallet: avm.NewWalletClient(uri, "Swap"),
+		swapChain:       avm.NewClient(uri, "Swap"),
+		swapChainWallet: avm.NewWalletClient(uri, "Swap"),
 		cChain:       evm.NewCChainClient(uri),
 		cChainEth:    NewEthClient(ipAddr, uint(port)), // wrapper over ethclient.Client
 		info:         info.NewClient(uri),
@@ -62,12 +62,12 @@ func (c APIClient) CoreChainAPI() platformvm.Client {
 	return c.platform
 }
 
-func (c APIClient) XChainAPI() avm.Client {
-	return c.xChain
+func (c APIClient) SwapChainAPI() avm.Client {
+	return c.swapChain
 }
 
-func (c APIClient) XChainWalletAPI() avm.WalletClient {
-	return c.xChainWallet
+func (c APIClient) SwapChainWalletAPI() avm.WalletClient {
+	return c.swapChainWallet
 }
 
 func (c APIClient) CChainAPI() evm.Client {
