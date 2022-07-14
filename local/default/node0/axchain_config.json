@@ -1,5 +1,5 @@
 {
-  "snowman-api-enabled": false,
+  "kleroterion-api-enabled": false,
   "coreth-admin-api-enabled": false,
   "coreth-admin-api-dir": "",
   "eth-apis": ["public-eth", "public-eth-filter", "net", "web3", "internal-public-eth", "internal-public-blockchain",  "internal-public-transaction-pool", "internal-public-account"],
